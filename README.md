@@ -41,10 +41,10 @@ To launch the django server, execute the script ```LaunchServer.sh``` in Malware
 
 ## Contributors
 
-[mailto:gregory.guillermin@postgrad.manchester.ac.uk](Grégory Guillermin) @ [https://winto.xyz](Winto)
+Grégory Guillermin | https://winto.xyz | gregory.guillermin@postgrad.manchester.ac.uk
 
-[http://scikit-learn.org](Scikit API)
+http://scikit-learn.org - Scikit API
 
-[http://vxheaven.org/](VX Heaven Dataset)
+http://vxheaven.org/ - VX Heaven Dataset
 
 ## Licence
