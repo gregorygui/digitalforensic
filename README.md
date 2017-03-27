@@ -8,24 +8,18 @@ Any help or requests can be made. The App was built, as far as possible, with sc
 
 ## Installation
 
-Download the project with https or git.
-```sh
-git clone https://github.com/gregorygui/digitalforensic.git
-```
-
 OS X & Linux:
 
 ```sh
-sudo apt-get install python3 python3-pip
-sudo pip3 install django scipy numpy scikit-learn
-```
-
-You also have to define your default version of python to 3.
-The best way is to add an alias to your ```.bashrc``` located in your home. (You can do the same thing for pip)
-
-```sh
-alias python='python3'
-alias pip='pip3'
+sudo apt-get install python3 python3-pip python3-pyvenv python3-virtualenv
+sudo apt-get install python3-autoenv
+mkdir PATH/DIRECTORY
+cd PATH/DIRECTORY
+git clone https://github.com/gregorygui/digitalforensic.git
+pyvenv env
+echo "source $(pwd)/env/bin/activate">.env
+source env/bin/activate
+pip install django bs4 requests scipy numpy scikit-learn
 ```
 
 ***
