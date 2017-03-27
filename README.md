@@ -11,8 +11,7 @@ Any help or requests can be made. The App was built, as far as possible, with sc
 OS X & Linux:
 
 ```sh
-sudo apt-get install python3 python3-pip python3-pyvenv python3-virtualenv
-sudo apt-get install python3-autoenv
+sudo apt-get install python3 python3-pip python3-pyvenv python3-virtualenv python3-autoenv
 mkdir PATH/DIRECTORY
 cd PATH/DIRECTORY
 git clone https://github.com/gregorygui/digitalforensic.git
