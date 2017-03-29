@@ -11,7 +11,7 @@ Any help or requests can be made. The App was built, as far as possible, with sc
 OS X & Linux:
 
 ```sh
-sudo apt-get install python3 python3-pip python3-pyvenv python3-virtualenv mongodb libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg-dev
+sudo apt-get install python3 python3-pip python3-pyvenv python3-virtualenv mongodb libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg-dev tcpdump virtualbox virtualbox-ext-pack volatility libcap2-bin
 pip3 install autoenv
 echo `which activate.sh` >> ~/.bashrc
 mkdir PATH/DIRECTORY
