@@ -21,7 +21,7 @@ pyvenv env
 echo "source $(pwd)/env/bin/activate">.env
 source env/bin/activate
 pip install --upgrade pip
-pip install django bs4 requests scipy numpy scikit-learn
+pip install -r requirements.txt
 ```
 
 ***
