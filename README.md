@@ -11,16 +11,17 @@ Any help or requests can be made. The App was built, as far as possible, with sc
 OS X & Linux:
 
 ```sh
-sudo apt-get install python3 python3-pip python3-pyvenv python3-virtualenv mongodb libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg-dev tcpdump virtualbox virtualbox-ext-pack volatility libcap2-bin
-pip3 install autoenv
+sudo apt-get install python python-pip virtualenv mongodb libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg-dev tcpdump virtualbox virtualbox-ext-pack volatility libcap2-bin
+pip install autoenv
 echo `which activate.sh` >> ~/.bashrc
 mkdir PATH/DIRECTORY
 cd PATH/DIRECTORY
 git clone https://github.com/gregorygui/digitalforensic.git
-pyvenv env
-echo "source $(pwd)/env/bin/activate">.env
-source env/bin/activate
+virtualenv -p python2.7 venv
+echo "source $(pwd)/venv/bin/activate">.env
+source venv/bin/activate
 pip install --upgrade pip
+pip install -U pip setuptools
 pip install -r requirements.txt
 ```
 
