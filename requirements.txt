@@ -1,6 +1,7 @@
 Django
 clamav
 bs4
+lxml
 yara-python
 yara
 pefile
