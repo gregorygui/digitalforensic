@@ -1,6 +1,6 @@
 #Ignore temporary files
-tmp*
+*tmp*
 
 #ignore temporary files created by Django
-/__pycache__/*
-/migrations/*
+*/__pycache__/*
+*/migrations/*
