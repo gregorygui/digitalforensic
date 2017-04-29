@@ -4,20 +4,18 @@ Investigation of Digital Forensic Techniques - University of Manchester Master's
 ## Description
 
 As part of my master's project about malware detection and classification, I build this WebApp to perform classification and detection of different malware.
-Any help or requests can be made. The App was built, as far as possible, with scalabality allowing anyone to add a plugin (notably in machien elarning algorithm).
+Any help or requests can be made. The App was built, as far as possible, with scalabality allowing anyone to add a plugin (notably in machine learning algorithm).
 
 ## Installation
 
 OS X & Linux:
 
 ```sh
-sudo apt-get install python python-pip virtualenv mongodb libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg-dev tcpdump virtualbox virtualbox-ext-pack volatility libcap2-bin
+sudo apt-get install python3 python3-pip virtualenv 
 pip install autoenv
 echo `which activate.sh` >> ~/.bashrc
-mkdir PATH/DIRECTORY
-cd PATH/DIRECTORY
 git clone https://github.com/gregorygui/digitalforensic.git
-virtualenv -p python2.7 venv
+virtualenv -p python3.5 venv
 echo "source $(pwd)/venv/bin/activate">.env
 source venv/bin/activate
 pip install --upgrade pip

@@ -1,0 +1,3 @@
+[console_scripts]
+yara-ctypes = yara.cli:entry
+
