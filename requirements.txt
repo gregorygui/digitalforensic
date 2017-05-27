@@ -1,5 +1,5 @@
 Django
-clamav
+Django-highcharts
 bs4
 lxml
 yara-python
