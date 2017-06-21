@@ -5,3 +5,6 @@ lxml
 yara-python
 yara
 pefile
+numpy
+scikit-learn
+scipy

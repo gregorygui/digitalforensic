@@ -1,6 +1,16 @@
 #Ignore temporary files
-*tmp*
+**/tmp*
 
 #ignore temporary files created by Django
-*/__pycache__/*
-*/migrations/*
+**/__pycache__/
+**/migrations/
+
+#Ignore sqlite database
+*.sqlite3
+
+#Ignore Uploads
+**/Uploads/
+
+#Ignore virtualenv
+**/venv/*
+.env
