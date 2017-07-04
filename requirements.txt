@@ -6,5 +6,6 @@ yara-python
 yara
 pefile
 numpy
+requests
 scikit-learn
 scipy
