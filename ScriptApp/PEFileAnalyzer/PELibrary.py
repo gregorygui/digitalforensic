@@ -8,7 +8,7 @@ import uuid
 
 from math import log
 
-from .MalwareDefinition import inconsistentCompileDate, VTScore, detectIP, inconsistentSections
+from MalwareDefinition import inconsistentCompileDate, VTScore, detectIP, inconsistentSections
 
 criterions=dict()
 

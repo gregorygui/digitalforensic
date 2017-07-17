@@ -3,6 +3,8 @@ Created on 15 juil. 2017
 
 @author: Gregory
 '''
+from VirusTotalAPI import getScore
+
 
 def main():
     print("Hello")

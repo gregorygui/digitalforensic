@@ -3,10 +3,12 @@ import requests
 import time
 import uuid
 import os
+import yaml
 
 from .VTScrapping import getDetailed, getDetailedURL
 
-KEY=os.environ["VT_API_KEY"]
+config = yaml.load(open('classification/config.yml', 'r'))
+KEY=config["VT_API_KEY"]
 
 def getMD5(r):
 	return hashlib.md5(r).hexdigest()
