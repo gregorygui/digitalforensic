@@ -6,7 +6,7 @@
 **/migrations/
 
 #Ignore sqlite database
-*.sqlite3
+***/db*
 
 #Ignore Uploads
 **/Uploads/

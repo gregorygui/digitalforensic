@@ -2,11 +2,10 @@ Django
 Django-highcharts
 bs4
 lxml
-yara-python
-yara
 pefile
 numpy
 requests
 scikit-learn
+matplotlib
 scipy
 PyYAML
