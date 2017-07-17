@@ -12,8 +12,9 @@
 **/Uploads/
 
 #Ignore virtualenv
-**/venv/*
+**/venv*
 .env
 
 #Ignore PyCHarm Files
-**/.idea/
+**/.project*
+**/.pydevproject*

@@ -9,3 +9,4 @@ numpy
 requests
 scikit-learn
 scipy
+PyYAML
