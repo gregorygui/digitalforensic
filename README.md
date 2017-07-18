@@ -1,10 +1,15 @@
 # A clever Malware Analysis Platform
 Investigation of Digital Forensic Techniques - University of Manchester Master's Project
+Find the full thesis [here](https://winto.xyz/documents/report.pdf)
 
 ## Description
 
 As part of my master's project about malware detection and classification, I build this WebApp to perform classification and detection of different malware.
 Any help or requests can be made. The App was built, as far as possible, with scalabality allowing anyone to add a plugin (notably in machine learning algorithm).
+
+## Structure
+
+The ScriptApp folder contains my experiments on machine learning algorithms whereas WebApp folder only contains a Django (web framework based on python) application.
 
 ## Installation
 
@@ -29,11 +34,6 @@ pip install -r requirements.txt
 
 ## Development setup
 
-To launch the django server, execute the script ```LaunchServer.sh``` in MalwareAnalysis directory. By default the server uses **port 8080**.
-```sh
-./LaunchServer
-```
-
 ## Contributors
 
 Grégory Guillermin | https://winto.xyz | gregory.guillermin@postgrad.manchester.ac.uk
@@ -41,5 +41,3 @@ Grégory Guillermin | https://winto.xyz | gregory.guillermin@postgrad.manchester
 http://scikit-learn.org - Scikit API
 
 http://vxheaven.org/ - VX Heaven Dataset
-
-## Licence
