@@ -40,34 +40,38 @@ def isMalicious(c, fid):
 
 def get_data(c):
 	dc = get_default_criterion(c)
+	data = {}
 	ar=[]
+	targets = []
 	for fid in get_files(c):
-		row = [0] * (len(dc)+1)
+		row = [0] * len(dc)
 		
 		for crit in get_criterions(c, fid):
 			row[dc.index(crit)]=1
 
-		if isMalicious(c, fid):
-			row[-1]=1
-		else:
-			row[-1]=0
-		
 		ar.append(row)
-	
-	return ar
 
-def build_dataset():
-	db = sqlite3.connect('samples.sqlite3')
+		if isMalicious(c, fid):
+			targets.append(1)
+		else:
+			targets.append(0)
+
+	data['data']=ar
+	data['targets']=targets
+	return data
+
+def build_dataset(d):
+	db = sqlite3.connect(d)
 	c = db.cursor()
 	
 	dataset={}
 	dataset['features_names'] = get_default_criterion(c)
-	dataset['data'] = (get_data(c))[:-1]
-	dataset['targets'] = False
+	dataset['data'] = (get_data(c))['data']
+	dataset['targets'] = (get_data(c))['targets']
 	dataset['description'] = "Automatic built dataset based on malware samples from the web application. Features are criterions to define if it is malicious or not"
 
 	db.close()
-	print(dataset)
+	# print(dataset)
 
 	return dataset
 
