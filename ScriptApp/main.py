@@ -6,6 +6,7 @@ Created on 15 juil. 2017
 import yaml
 
 from MachineLearning import build_dataset, RandomForest, Bayesian
+from PEFileAnalyzer import peData
 
 config=yaml.load(open('config.yml','r'))
 

@@ -76,10 +76,3 @@ def getDetailed(res):
 
 def getDetailedURL(res):
 	return 0
-
-def main():
-	filename='tmp.txt'
-	print(getDetailed(open('tmp.txt','rb').read()))
-
-if __name__ == "__main__":
-	main()

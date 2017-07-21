@@ -5,7 +5,7 @@ import uuid
 import os
 import yaml
 
-from VTScrapping import getDetailed
+from VirusTotalAPI.VTScrapping import getDetailed
 
 config = yaml.load(open('config.yml', 'r'))
 KEY=config["VT_API_KEY"]
@@ -133,9 +133,3 @@ def handle_uploaded_file(f):
 			destination.write(chunk)
 	destination.close()
 	return filename
-	
-def main():
-	print("Hello")
-
-if __name__ == "__main__":
-	main()

@@ -133,13 +133,3 @@ def handle_uploaded_file(f):
 			destination.write(chunk)
 	destination.close()
 	return filename
-	
-def main():
-	filename='infected.file'
-	hashE="3145c517faf07480ca1f08ec44301503"
-	url="http://www.bozatam.info/"
-
-	print(getScore(hashE))
-
-if __name__ == "__main__":
-	main()

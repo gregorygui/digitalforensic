@@ -8,7 +8,7 @@ import uuid
 
 from math import log
 
-from MalwareDefinition import inconsistentCompileDate, VTScore, detectIP, inconsistentSections
+from PEFileAnalyzer.MalwareDefinition import inconsistentCompileDate, VTScore, detectIP, inconsistentSections
 
 criterions=dict()
 
@@ -138,20 +138,3 @@ class peData:
  				crit[c]=val
 
  		return crit
-
-def main():
-
-	signatures = peutils.SignatureDatabase('/home/harrapx/Desktop/digitalforensic/MalwareAnalysis/MalwareAnalysis/userdb.txt')
-	
-
-	file="/home/harrapx/Documents/MalwareLabs/BinaryCollection/Chapter_1L/Lab01-02.exe"
-	Packedfile="/home/harrapx/Documents/MalwareLabs/BinaryCollection/Chapter_11L/Lab11-03.exe"
-	pe=peData(file, '/home/harrapx/Desktop/digitalforensic/MalwareAnalysis/MalwareAnalysis/userdb.txt')
-	
-	t=pefile.PE(file)
-	#print(signatures.match(t, ep_only=True)[0])
-
-	print(pe.getCriterions())
-
-if __name__ == '__main__':
-	main()

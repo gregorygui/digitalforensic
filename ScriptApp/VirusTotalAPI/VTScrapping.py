@@ -73,9 +73,3 @@ def getDetailed(res):
 	result={'Imports':getImports(base), 'Filenames':getFilenames(base), 'Hash':getHash(base), 'Sections':getSections(base), 'Header':getPEHeader(base)}
 
 	return result
-
-def main():
-	print(getDetailed(open('tmp.txt','rb').read()))
-
-if __name__ == "__main__":
-	main()
