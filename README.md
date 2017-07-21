@@ -1,5 +1,6 @@
 # A clever Malware Analysis Platform
 Investigation of Digital Forensic Techniques - University of Manchester Master's Project
+
 Find the full thesis [here](https://winto.xyz/documents/report.pdf)
 
 ## Description
@@ -40,4 +41,6 @@ Grégory Guillermin | https://winto.xyz | gregory.guillermin@postgrad.manchester
 
 http://scikit-learn.org - Scikit API
 
-http://vxheaven.org/ - VX Heaven Dataset
+https://zeltser.com/malware-sample-sources/ - Malware samples listing
+
+https://github.com/ytisf/theZoo - Project used for samples
