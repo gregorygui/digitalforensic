@@ -54,7 +54,7 @@ class peData:
  			for entry in self.file.DIRECTORY_ENTRY_IMPORT:
  				e=entry.dll
  				
- 				if entry.imports:
+ 				if entry.imports and entry.dll:
  					for i in entry.imports:
  						listImports[e.decode('ascii')]=(i.name).decode('ascii')
  			

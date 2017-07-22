@@ -71,9 +71,5 @@ def build_dataset(d):
 	dataset['description'] = "Automatic built dataset based on malware samples from the web application. Features are criterions to define if it is malicious or not"
 
 	db.close()
-	# print(dataset)
 
 	return dataset
-
-if __name__ == '__main__':
-	build_dataset()
