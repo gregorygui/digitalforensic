@@ -9,6 +9,7 @@ import os
 import shutil
 import time
 import yaml
+import argparse
 
 from MachineLearning import build_dataset, RandomForest, Bayesian
 
@@ -36,10 +37,10 @@ def purgeDB(dbname):
 		db.commit()
 
 		db.close()
+		print("Success !")
 
-		return 1
-	except:
-		return -1
+	except Exception as e:
+		print("Failed: "+str(e)+"....")
 
 def uploadFile(f):
 	start = time.clock()
@@ -62,23 +63,44 @@ def uploadFile(f):
 	else:
 		print("### ERROR during upload process of "+f+" ###")
 
-def main():
-	dbname = 'samples.sqlite3'
-	
+def main(dbname, old_db, DIR):	
 	try:
-		DIR=config['SAMPLES_DIRECTORY']
 		
 		for f in os.listdir(DIR):
 			start = time.clock()
 			uploadFile(DIR+"/"+f)
 			print("("+str(round(time.clock()-start,3))+"s)\n\n")
+			time.sleep(5)
 		
-		shutil.copy2(config['DB_PATH'], dbname)
+		shutil.copy2(old_db, dbname)
 		purgeDB(dbname)
 		print("Database purged...\nEnd of process...")
 			
 	except Exception as e:
-		print("No database "+dbname+ "\nException: "+str(e))
+		print("Error: "+str(e))
     
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description="Performing actions (database, machine learning, uploads,...)")
+
+    parser.add_argument("-u", "--upload", nargs=1, metavar="PATH", help="perform uploads from PATH location (-d and --original-db required)")
+    parser.add_argument("--originaldb", nargs=1, metavar="DB_PATH", help="selecting a database to copy")
+    parser.add_argument("-p", "--purge", help="purge db (required -d)", action="store_true")
+    parser.add_argument("-d", "--database", nargs=1, metavar="DB_PATH", help="selecting database")
+
+    args = parser.parse_args()
+
+    if args.purge:
+    	if args.database:
+    		print("Purging database "+str(args.database[0])+"...")
+    		purgeDB(args.database[0])
+    	else:
+    		print("Missing database name...")
+    elif args.upload:
+    	if args.database:
+    		if args.originaldb:
+    			print("Performing Uploads from \""+str(args.upload[0])+"\" ... ("+str(args.originaldb[0])+" --> "+str(args.database[0])+")\n")
+    			main(args.database[0], args.originaldb[0], args.upload[0])
+    		else:
+    			print("Missing original db PATH")
+    	else:
+    		print("Missing new db PATH")

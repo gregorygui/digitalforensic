@@ -21,3 +21,10 @@
 
 #Ignore config files
 **/config*
+
+#Ignore Logs
+**/Log*
+**/log*
+
+#Ignore script
+**/LaunchSc*
