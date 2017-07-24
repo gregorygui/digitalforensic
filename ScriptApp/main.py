@@ -15,6 +15,14 @@ from MachineLearning import build_dataset, RandomForest, Bayesian
 
 config = yaml.load(open('config.yml', 'r'))
 
+def machineLearning(dbname):
+	try:
+		print("Building dataset...")
+		dataset = build_dataset(dbname)
+		print(len(dataset['data']))
+	except Exception as e:
+		print("Error: "+str(e))
+
 def purgeDB(dbname):
 	try:
 		db = sqlite3.connect(dbname)
@@ -86,6 +94,7 @@ if __name__ == '__main__':
     parser.add_argument("--originaldb", nargs=1, metavar="DB_PATH", help="selecting a database to copy")
     parser.add_argument("-p", "--purge", help="purge db (required -d)", action="store_true")
     parser.add_argument("-d", "--database", nargs=1, metavar="DB_PATH", help="selecting database")
+    parser.add_argument("-ml", "--mLearning", action="store_true", help="bulding dataset and machine learning model (requires -d)")
 
     args = parser.parse_args()
 
@@ -104,3 +113,8 @@ if __name__ == '__main__':
     			print("Missing original db PATH")
     	else:
     		print("Missing new db PATH")
+    elif args.mLearning:
+    	if args.database:
+    		machineLearning(args.database[0])
+    	else:
+    		print("Missing database PATH")

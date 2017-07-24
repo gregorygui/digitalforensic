@@ -59,19 +59,3 @@ class DefaultCriterion(models.Model):
 	average=models.DecimalField(max_digits=4, decimal_places=2, default=0)
 	nbFiles=models.PositiveSmallIntegerField(default=0)
 	nbMalwares=models.PositiveSmallIntegerField(default=0)
-
-# class Rule(models.Model):
-# 	name=models.CharField(max_length=50)
-# 	author=models.CharField(max_length=20)
-# 	date=models.DateTimeField(auto_now_add=True)
-# 	description=models.CharField(max_length=200)
-
-# class RuleStrings(models.Model):
-# 	rule=models.ForeignKey(Rule, on_delete=models.CASCADE)
-# 	isHex=models.BooleanField(default=False)
-# 	name=models.CharField(max_length=70)
-# 	string=models.CharField(max_length=500)
-
-# class RuleConditions(models.Model):
-# 	rule=models.ForeignKey(Rule, on_delete=models.CASCADE)
-# 	operator=models.CharField(max_length=500)
