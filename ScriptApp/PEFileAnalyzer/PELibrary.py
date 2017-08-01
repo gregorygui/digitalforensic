@@ -8,7 +8,7 @@ import uuid
 
 from math import log
 
-from PEFileAnalyzer.MalwareDefinition import inconsistentCompileDate, VTScore, detectIP, inconsistentSections
+from PEFileAnalyzer.MalwareDefinition import inconsistentCompileDate, VTScore, detectIP, inconsistentSections, functionScore, sectionsOverflow, overSized
 
 criterions=dict()
 
@@ -16,6 +16,8 @@ criterions['compileDate']={'name':'Inconsistent Compilation Date','function':'in
 criterions['VTScore']={'name':'Virus Total Score', 'function':'VTScore', 'coef':80}
 criterions['ipdetected']={'name':'IP Pattern Detected','function':'detectIP', 'coef':50}
 criterions['inconsistentSections']={'name':'Inconsistent Section Name(s)', 'function':'inconsistentSections', 'coef':60}
+criterions['maliciousFunction']={'name':'Malicious Function(s)', 'function':'functionScore', 'coef':70}
+criterions['overSized']={'name':'Oversized File', 'function':'overSized', 'coef':30}
 
 def defaultCriterions():
 	return criterions
@@ -29,6 +31,12 @@ def execute_func(f, peData):
 		return globals()[f](peData.getSections())
 	elif f == 'VTScore':
 		return globals()[f](peData.getMD5())
+	elif f == 'functionScore':
+		return globals()[f](peData.getImports())
+	elif f == 'overSized':
+		return globals()[f](peData.filename)
+	elif f == 'sectionsOverflow':
+		return globals()[f](peData.getSections())
 
 class peData:
  	"""Analyze a PE file"""

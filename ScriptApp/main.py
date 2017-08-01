@@ -11,7 +11,8 @@ import time
 import yaml
 import argparse
 
-from MachineLearning import build_dataset, RandomForest, Bayesian
+from MachineLearning import build_dataset, RandomForest, Bayesian, figure_feature_importances
+from PEFileAnalyzer import peData
 
 config = yaml.load(open('config.yml', 'r'))
 
@@ -19,7 +20,10 @@ def machineLearning(dbname):
 	try:
 		print("Building dataset...")
 		dataset = build_dataset(dbname)
-		print(len(dataset['data']))
+		rf = RandomForest(dataset)
+		plt=figure_feature_importances(rf, dataset['features_names'])
+		print("nb of samples: "+str(len(dataset['data'])))
+		plt.show()
 	except Exception as e:
 		print("Error: "+str(e))
 
@@ -71,6 +75,22 @@ def uploadFile(f):
 	else:
 		print("### ERROR during upload process of "+f+" ###")
 
+def analyzeFile(f):
+	mal=0
+	coefTot=0
+	ana = peData(f,os.environ['VIRTUAL_ENV']+'/../WebApp/MalwareAnalysis/userdb.txt')
+	
+	print("Analyze is running...\n")
+	
+	crit = ana.getCriterions()
+	for c in crit:
+		p=crit[c]
+		print(p['name']+": "+str(p['score'])+"/10 (coeff "+str(p['coef'])+")")
+		mal+=p['score']*p['coef']
+		coefTot+=p['coef']
+	
+	print("\nTotal: "+str(mal)+" ("+str(round(mal/coefTot,2))+"/10)")
+
 def main(dbname, old_db, DIR):	
 	try:
 		
@@ -95,26 +115,40 @@ if __name__ == '__main__':
     parser.add_argument("-p", "--purge", help="purge db (required -d)", action="store_true")
     parser.add_argument("-d", "--database", nargs=1, metavar="DB_PATH", help="selecting database")
     parser.add_argument("-ml", "--mLearning", action="store_true", help="bulding dataset and machine learning model (requires -d)")
+    parser.add_argument("-f", "--file", nargs=1, metavar="FILE", help="perfom PEAnalysis")
 
     args = parser.parse_args()
 
     if args.purge:
+    	
     	if args.database:
     		print("Purging database "+str(args.database[0])+"...")
     		purgeDB(args.database[0])
+    	
     	else:
     		print("Missing database name...")
+    
     elif args.upload:
+    	
     	if args.database:
+    		
     		if args.originaldb:
     			print("Performing Uploads from \""+str(args.upload[0])+"\" ... ("+str(args.originaldb[0])+" --> "+str(args.database[0])+")\n")
     			main(args.database[0], args.originaldb[0], args.upload[0])
     		else:
     			print("Missing original db PATH")
+    	
     	else:
     		print("Missing new db PATH")
+    
     elif args.mLearning:
+    	
     	if args.database:
     		machineLearning(args.database[0])
+    	
     	else:
     		print("Missing database PATH")
+
+    elif args.file:
+    	analyzeFile(args.file[0])
+

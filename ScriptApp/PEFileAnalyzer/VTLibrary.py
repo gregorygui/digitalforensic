@@ -5,9 +5,10 @@ import uuid
 import os
 import yaml
 
-from VirusTotalAPI.VTScrapping import getDetailed
+from PEFileAnalyzer.VTScrapping import getDetailed
+# from VTScrapping import getDetailed
 
-config = yaml.load(open('config.yml', 'r'))
+config = yaml.load(open(os.environ['VIRTUAL_ENV']+'/../ScriptApp/config.yml', 'r'))
 KEY=config["VT_API_KEY"]
 
 def getMD5(r):
