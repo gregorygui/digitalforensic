@@ -6,8 +6,7 @@ from .forms import HashForm, URLForm, FileForm, AlgoSVMForm
 
 from .models import File, FileImport, FileSection, FileExport, FileCriterion, DefaultCriterion
 
-from .VTLibrary import handle_uploaded_file, VTHash, VTUrl, VTFile
-from .PELibrary import peData, defaultCriterions
+from PEFileAnalyzer import handle_uploaded_file, VTHash, VTUrl, VTFile, peData, defaultCriterions
 
 import os
 import uuid

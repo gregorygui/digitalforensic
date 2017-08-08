@@ -84,7 +84,7 @@ class peData:
  		try:
  			return self.signatures.match(self.file, ep_only=True)[0]
  		except:
- 			return ""
+ 			return "None"
 
  	def getStrings(self):
  		strings=list()
