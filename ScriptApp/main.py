@@ -85,11 +85,10 @@ def analyzeFile(f):
 	crit = ana.getCriterions()
 	for c in crit:
 		p=crit[c]
-		print(p['name']+": "+str(p['score'])+"/10 (coeff "+str(p['coef'])+")")
+		print(p['name']+": "+str(round(p['score'], 2))+"/10 (coeff "+str(p['coef'])+")")
 		mal+=p['score']*p['coef']
 		coefTot+=p['coef']
-	
-	print("\nTotal: "+str(mal)+" ("+str(round(mal/coefTot,2))+"/10)")
+	print("\nTotal: "+str(round(mal,2))+" ("+str(round(mal/coefTot,2))+"/10)")
 
 def main(dbname, old_db, DIR):	
 	try:

@@ -4,7 +4,7 @@ from django.conf import settings
 
 from .forms import HashForm, URLForm, FileForm, AlgoSVMForm
 
-from .models import File, FileImport, FileSection, FileExport, FileCriterion, DefaultCriterion
+from .models import File, FileImport, FileFct, FileSection, FileExport, FileCriterion, DefaultCriterion
 
 from PEFileAnalyzer import handle_uploaded_file, VTHash, VTUrl, VTFile, peData, defaultCriterions
 
@@ -90,7 +90,10 @@ def addNewFiles(request):
                         file.filesection_set.create(name=key,va=value)
 
                     for key, value in ana.getImports().items():
-                        file.fileimport_set.create(dll=key, function=value)
+                        file.fileimport_set.create(dll=key)
+                        for v in value:
+                            d=file.fileimport_set.get(dll=key)
+                            d.filefct_set.create(function=v)
 
                     exports=ana.getExports()
                     if exports:
@@ -106,6 +109,7 @@ def addNewFiles(request):
 
                     for c in crit:
                         val=crit[c]
+                        DefaultCriterion.objects.get_or_create(name=val['name'], coef=val['coef'])
                         file.filecriterion_set.create(name=val['name'], score=val['score'], coef=val['coef'])
                         mal+=val['score']*val['coef']
                         coefTot+=val['coef']
@@ -116,10 +120,11 @@ def addNewFiles(request):
                         file.maliciousness=0
 
                     file.save()
-
-                    updateDefaultCriterions()
-
-                    os.remove(os.path.join(settings.PROJECT_ROOT, f))   
+                    
+                    try:
+                        updateDefaultCriterions()
+                    finally:
+                        os.remove(os.path.join(settings.PROJECT_ROOT, f))   
 
             return redirect('classification:fileDetails', file_hash=md5)
         else:

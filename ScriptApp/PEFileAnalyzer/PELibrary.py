@@ -8,16 +8,17 @@ import uuid
 
 from math import log
 
-from PEFileAnalyzer.MalwareDefinition import inconsistentCompileDate, VTScore, detectIP, inconsistentSections, functionScore, sectionsOverflow, overSized
+from PEFileAnalyzer.MalwareDefinition import inconsistentCompileDate, VTScore, detectRemoteConnection, inconsistentSections, functionScore, sectionsOverflow, overSized
 
 criterions=dict()
 
 criterions['compileDate']={'name':'Inconsistent Compilation Date','function':'inconsistentCompileDate', 'coef':90}
 criterions['VTScore']={'name':'Virus Total Score', 'function':'VTScore', 'coef':80}
-criterions['ipdetected']={'name':'IP Pattern Detected','function':'detectIP', 'coef':50}
 criterions['inconsistentSections']={'name':'Inconsistent Section Name(s)', 'function':'inconsistentSections', 'coef':60}
 criterions['maliciousFunction']={'name':'Malicious Function(s)', 'function':'functionScore', 'coef':70}
 criterions['overSized']={'name':'Oversized File', 'function':'overSized', 'coef':30}
+# criterions['ipdetected']={'name':'IP Pattern Detected','function':'detectIP', 'coef':50}
+criterions['remoteconnection']={'name':'Remote Connection detected', 'function':'detectRemoteConnection', 'coef':70}
 
 def defaultCriterions():
 	return criterions
@@ -25,7 +26,7 @@ def defaultCriterions():
 def execute_func(f, peData):
 	if f == 'inconsistentCompileDate':
 		return globals()[f](peData.getDate())
-	elif f == 'detectIP':
+	elif f == 'detectRemoteConnection':
 		return globals()[f](peData.getStrings())
 	elif f == 'inconsistentSections':
 		return globals()[f](peData.getSections())
@@ -52,21 +53,23 @@ class peData:
  		dictSections={}
  		for section in self.file.sections:
  			key=section.Name
- 			dictSections[key.decode('ascii')]=section.VirtualAddress
+ 			dictSections[(key.decode('ascii')).rstrip('\x00')]=section.VirtualAddress
  		return dictSections
 
  	def getImports(self):
  		if hasattr(self.file, 'DIRECTORY_ENTRY_IMPORT'):
- 			listImports={}
+ 			dictImports={}
  			
  			for entry in self.file.DIRECTORY_ENTRY_IMPORT:
  				e=entry.dll
+ 				listImports=[]
  				
  				if entry.imports and entry.dll:
  					for i in entry.imports:
- 						listImports[e.decode('ascii')]=(i.name).decode('ascii')
- 			
- 			return listImports
+ 						listImports.append((i.name).decode('ascii'))
+
+ 				dictImports[e.decode('ascii')]=listImports
+ 			return dictImports
  		
  		else:
  			return None
@@ -74,8 +77,9 @@ class peData:
  	def getExports(self):
  		listExports=[]
  		if hasattr(self.file, 'DIRECTORY_ENTRY_EXPORT'):
+
  			for e in self.file.DIRECTORY_ENTRY_EXPORT.symbols:
- 				listExports+=(e.name).decode('ascii')
+ 				listExports.append(e.name.decode('ascii'))
  			return listExports
  		else:
  			return None

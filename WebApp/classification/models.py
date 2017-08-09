@@ -36,7 +36,12 @@ class FileSection(models.Model):
 class FileImport(models.Model):
 	file=models.ForeignKey(File, on_delete=models.CASCADE)
 	dll=models.CharField(max_length=250)
+	mal=models.BooleanField(default=False)
+
+class FileFct(models.Model):
+	dll=models.ForeignKey(FileImport, on_delete=models.CASCADE)
 	function=models.CharField(max_length=250)
+	mal=models.BooleanField(default=False)
 
 class FileExport(models.Model):
 	file=models.ForeignKey(File, on_delete=models.CASCADE)
@@ -45,7 +50,7 @@ class FileExport(models.Model):
 class FileStrings(models.Model):
 	file=models.ForeignKey(File, on_delete=models.CASCADE)
 	string=models.CharField(max_length=400)
-	suspicious=models.BooleanField(default=False)
+	mal=models.BooleanField(default=False)
 
 class FileCriterion(models.Model):
 	file=models.ForeignKey(File, on_delete=models.CASCADE)
