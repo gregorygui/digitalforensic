@@ -13,10 +13,10 @@ class AlgoRFForm(forms.Form):
 	trees = forms.IntegerField(label='Number of trees', initial=10, min_value=1, max_value=1000, widget=forms.TextInput(attrs={'class':'form-control'}))
 	#max_depth = forms.IntegerField(label='Max Depth', min_value=1, max_value=1000)
 	CHOICES = (
-		('GINI', 'Gini'),
-		('ENTROPY', 'Entropy'))
+		('gini', 'Gini'),
+		('entropy', 'Entropy'))
 	criterion = forms.ChoiceField(label='Function to measure the quality of a split', choices=CHOICES, required=True)
 	bootstrap = forms.BooleanField(label='Bootstrap', initial=True)
 
 class AlgoNBForm(forms.Form):
-	alpha = forms.FloatField(label='Additive smoothing parameter', initial=1.0, min_value=0.0, max_value=10.0, widget=forms.TextInput(attrs={'class':'form-control'}))
+	alpha = forms.FloatField(label='Additive smoothing parameter (alpha)', initial=1.0, min_value=0, max_value=10.0, widget=forms.TextInput(attrs={'class':'form-control'}))

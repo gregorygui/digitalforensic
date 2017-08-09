@@ -7,6 +7,7 @@ from .forms import HashForm, URLForm, FileForm, AlgoRFForm, AlgoNBForm
 from .models import File, FileImport, FileFct, FileSection, FileExport, FileCriterion, DefaultCriterion
 
 from PEFileAnalyzer import handle_uploaded_file, VTHash, VTUrl, VTFile, peData, defaultCriterions
+from MachineLearning import RandomForest, Bayesian, build_dataset, feature_importances
 
 import os
 import uuid
@@ -166,14 +167,48 @@ def parametersLearning(request):
     context={
     'title':"Learning Algorithm Parameters",
     'nbFiles':len(File.objects.all()),
-    'nbSafe':len(File.objects.filter(maliciousness__lt=4)),
-    'nbSusp':len(File.objects.filter(maliciousness__gt=4).filter(maliciousness__lt=6)),
+    'nbSafe':len(File.objects.all())-len(File.objects.filter(maliciousness__gt=6)),
     'nbMal':len(File.objects.filter(maliciousness__gt=6)),
     'formRF':AlgoRFForm(),
     'formNB':AlgoNBForm()
     }
 
     return render(request, 'classification/parametersLearning.html', context)
+
+def performTraining(request):
+    if request.method == 'POST':
+
+        formRF = AlgoRFForm(request.POST)
+        formNB = AlgoNBForm(request.POST)
+        dataset=build_dataset('db.sqlite3')
+        context={
+            'title':'Results - ',
+            'samples':len(File.objects.all()),
+            'crit':len(DefaultCriterion.objects.all())
+        } 
+
+        if formRF.is_valid():
+            trees=formRF.cleaned_data['trees']
+            criterion=formRF.cleaned_data['criterion']
+            bootstrap=formRF.cleaned_data['bootstrap']
+            clf = RandomForest(dataset, trees, criterion, bootstrap)
+            context['title']+='Random Forest'
+            context['fimp']=feature_importances(clf, dataset['features_names'])
+
+        elif formNB.is_valid():
+            alpha=formNB.cleaned_data['alpha']
+            clf = Bayesian(dataset, alpha)
+            context['title']+='Naive Bayes'
+
+        else:
+            return HttpResponseRedirect('/parameters/malware_decision/')
+
+        context.update({'clf':clf})
+
+        return render(request, 'classification/resultTraining.html', context)
+
+    else:
+        return HttpResponseRedirect('/parameters/malware_decision/')
 
 def virusTotal(request):
     formU = URLForm()

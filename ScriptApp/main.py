@@ -11,7 +11,7 @@ import time
 import yaml
 import argparse
 
-from MachineLearning import build_dataset, RandomForest, Bayesian, figure_feature_importances
+from MachineLearning import build_dataset, RandomForest, Bayesian, figure_feature_importances, feature_importances
 from PEFileAnalyzer import peData
 
 config = yaml.load(open('config.yml', 'r'))
@@ -20,10 +20,11 @@ def machineLearning(dbname):
 	try:
 		print("Building dataset...")
 		dataset = build_dataset(dbname)
-		rf = RandomForest(dataset)
-		plt=figure_feature_importances(rf, dataset['features_names'])
+		rf = RandomForest(dataset, 10, 'gini', True)
+		feature_importances(rf, dataset['features_names'])
 		print("nb of samples: "+str(len(dataset['data'])))
-		plt.show()
+		# plt=figure_feature_importances(rf, dataset['features_names'])
+		# plt.show()
 	except Exception as e:
 		print("Error: "+str(e))
 

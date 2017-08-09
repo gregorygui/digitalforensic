@@ -15,7 +15,6 @@
 								<tr>
 									<th>Files</th>
 									<th>Safe</th>
-									<th>Suspicious</th>
 									<th>Malicious</th>
 								</tr>
 						</thead>
@@ -23,7 +22,6 @@
 							<tr>
 								<td>{{nbFiles}}</td>
 								<td>{{nbSafe}}</td>
-								<td>{{nbSusp}}</td>
 								<td>{{nbMal}}</td>
 							</tr>
 						</tbody>
@@ -37,7 +35,7 @@
 					<br/>
 				</div>
 				<div class="content">
-					<form action="" method="post">
+					<form action="{% url 'classification:performTraining' %}" method="post">
     					{% csrf_token %}
     					{{ formRF }}
 					<br/>
@@ -53,7 +51,7 @@
 					<br/>
 				</div>
 				<div class="content">
-					<form action="" method="post">
+					<form action="{% url 'classification:performTraining' %}" method="post">
     					{% csrf_token %}
     					{{ formNB }}
 					<br/>

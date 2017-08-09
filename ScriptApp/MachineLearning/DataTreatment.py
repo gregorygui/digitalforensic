@@ -33,7 +33,7 @@ def isMalicious(c, fid):
 	c.execute("SELECT maliciousness FROM classification_file WHERE id=?", t)
 	m = (listTreatment(c))[0]
 
-	if m > 7:
+	if m > 6:
 		return True
 	else:
 		return False

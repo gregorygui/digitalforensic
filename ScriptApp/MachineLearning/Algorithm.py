@@ -6,6 +6,8 @@ from sklearn.datasets import load_iris
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import BernoulliNB
 
+from operator import itemgetter
+
 def figure_feature_importances(clf, features):
 	plt.figure()
 	plt.title("Features Importances")
@@ -21,16 +23,26 @@ def figure_feature_importances(clf, features):
 
 	return plt
 
-def RandomForest(ds):
+def feature_importances(clf, features):
+	d=dict()
+	importances = clf.feature_importances_
+	indices = np.argsort(importances)[::-1]
 	
-	clf = RandomForestClassifier()
+	for f in range(len(features)):
+		d[features[indices[f]]]=round(importances[indices[f]]*100, 2)
+		print("%d. feature %d - %s (%f)" % (f + 1, indices[f], features[indices[f]], importances[indices[f]]))
 
+	return sorted(d.items(), key=itemgetter(1), reverse=True)
+
+def RandomForest(ds,t,c,b):
+	
+	clf = RandomForestClassifier(n_estimators=t, criterion=c, bootstrap=b)
 	clf.fit(ds['data'], ds['targets'])
 	
 	return clf
 
-def Bayesian(ds):
-	clf = BernoulliNB()
+def Bayesian(ds, a):
+	clf = BernoulliNB(alpha=a)
 
 	clf.fit(ds['data'], ds['targets'])
 
