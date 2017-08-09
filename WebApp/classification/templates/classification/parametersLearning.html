@@ -5,7 +5,7 @@
 		<div class="col-md-12">
 			<div class="card">
 				<div class="header">
-					<h4 class="title">SVM with Linear Kernel</h4>
+					<h4 class="title">Statistics</h4>
 					<br/>
 				</div>
 				<div class="content">
@@ -28,13 +28,34 @@
 							</tr>
 						</tbody>
 					</table>
-					
-					<h5 class="title">Parameters</h5>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="header">
+					<h4 class="title">Random Forest - Parameters</h4>
 					<br/>
-					
+				</div>
+				<div class="content">
 					<form action="" method="post">
     					{% csrf_token %}
-    					{{ formAlgo }}
+    					{{ formRF }}
+					<br/>
+					<div class="clearfix">
+	    				<button type="submit" class="btn btn-info pull-right">Train</button>
+					</div>
+					</form>
+				</div>
+			</div>
+			<div class="card">
+				<div class="header">
+					<h4 class="title">Naive Bayes - Parameters</h4>
+					<br/>
+				</div>
+				<div class="content">
+					<form action="" method="post">
+    					{% csrf_token %}
+    					{{ formNB }}
 					<br/>
 					<div class="clearfix">
 	    				<button type="submit" class="btn btn-info pull-right">Train</button>

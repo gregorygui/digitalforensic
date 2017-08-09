@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.conf import settings
 
-from .forms import HashForm, URLForm, FileForm, AlgoSVMForm
+from .forms import HashForm, URLForm, FileForm, AlgoRFForm, AlgoNBForm
 
 from .models import File, FileImport, FileFct, FileSection, FileExport, FileCriterion, DefaultCriterion
 
@@ -169,7 +169,8 @@ def parametersLearning(request):
     'nbSafe':len(File.objects.filter(maliciousness__lt=4)),
     'nbSusp':len(File.objects.filter(maliciousness__gt=4).filter(maliciousness__lt=6)),
     'nbMal':len(File.objects.filter(maliciousness__gt=6)),
-    'formAlgo':AlgoSVMForm()
+    'formRF':AlgoRFForm(),
+    'formNB':AlgoNBForm()
     }
 
     return render(request, 'classification/parametersLearning.html', context)
