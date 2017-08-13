@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^parameters/criterions/$', views.parametersCriterions, name='parametersCriterions'),
     url(r'^parameters/malware_decision/$', views.parametersLearning, name='parametersLearning'),
     url(r'^parameters/malware_decision/train/$', views.performTraining, name='performTraining'),
+    url(r'^parameters/strings/$', views.parametersStrings, name='parametersStrings'),
+    url(r'^parameters/strings/delete/(?P<str_id>[0-9]+)$', views.delString, name='delString'),
 
     url(r'^virustotal/$', views.virusTotal, name='virusTotal'),
     url(r'^virustotal/analyze/$', views.analyzeVT, name='analyzeVT'),

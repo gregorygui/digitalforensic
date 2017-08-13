@@ -13,6 +13,8 @@
 							<tr>
 								<th>Name</th>
 								<th>Md5</th>
+								<th>Size</th>
+								<th>Analysis Duration</th>
 								<th>Added date</th>
 								<th>Maliciousness</th>
 							</tr>
@@ -22,6 +24,8 @@
 							<tr>
 								<td><a href="{% url 'classification:fileDetails' f.md5 %}">{{f.name}}</a></td>
 								<td>{{f.md5}}</td>
+								<td>{{f.size}} bytes</td>
+								<td>{{f.anaTime}}s</td>
 								<td>{{f.added_date}}</td>
 								<td>
 									{% if f.maliciousness > 6 %}

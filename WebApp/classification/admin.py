@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import File, FileSection, FileImport, FileExport, FileStrings, FileCriterion, DefaultCriterion
+from .models import File, FileSection, FileImport, FileExport, FileStrings, FileCriterion, DefaultCriterion, DefaultStrings
 
 class FileSectionInline(admin.TabularInline):
 	model=FileSection
@@ -34,7 +34,7 @@ class FileCriterionInline(admin.TabularInline):
 #admin.site.register(FileStrings, FileStringsAdmin)
 
 class FileAdmin(admin.ModelAdmin):
-	list_display=('name', 'md5', 'added_date', 'isMalicious')
+	list_display=('name', 'md5', 'size', 'anaTime', 'added_date', 'isMalicious')
 	list_filter=('added_date', 'maliciousness')
 	inlines=[FileSectionInline, FileImportInline, FileExportInline, FileCriterionInline, FileStringsInline]
 
@@ -44,3 +44,9 @@ class DefaultCriterionAdmin(admin.ModelAdmin):
 	list_display=('name', 'coef', 'average')
 
 admin.site.register(DefaultCriterion, DefaultCriterionAdmin)
+
+class DefaultStringsAdmin(admin.ModelAdmin):
+	list_display=('string', 'imp')
+	list_filter=('string', 'imp')
+
+admin.site.register(DefaultStrings, DefaultStringsAdmin)

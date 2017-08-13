@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import time
 
 # Create your models here.
 
@@ -12,6 +13,8 @@ class File(models.Model):
 	maliciousness=models.DecimalField(max_digits=3, decimal_places=2, default=0)
 	entropy=models.DecimalField(max_digits=4, decimal_places=2, default=0)
 	oep=models.IntegerField(default=0)
+	size=models.IntegerField(default=0)
+	anaTime=models.DecimalField(max_digits=4, decimal_places=2, default=0)
 
 	def isPacked(self):
 		return (packer!=null)
@@ -61,6 +64,13 @@ class FileCriterion(models.Model):
 class DefaultCriterion(models.Model):
 	name=models.CharField(max_length=100)
 	coef=models.PositiveSmallIntegerField(default=0)
+	average=models.DecimalField(max_digits=4, decimal_places=2, default=0)
+	nbFiles=models.PositiveSmallIntegerField(default=0)
+	nbMalwares=models.PositiveSmallIntegerField(default=0)
+
+class DefaultStrings(models.Model):
+	string=models.CharField(max_length=400)
+	imp=models.FloatField(default=1.0)
 	average=models.DecimalField(max_digits=4, decimal_places=2, default=0)
 	nbFiles=models.PositiveSmallIntegerField(default=0)
 	nbMalwares=models.PositiveSmallIntegerField(default=0)

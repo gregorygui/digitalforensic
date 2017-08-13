@@ -5,10 +5,11 @@ import string
 import datetime
 import hashlib
 import uuid
+import re
 
 from math import log
 
-from PEFileAnalyzer.MalwareDefinition import inconsistentCompileDate, VTScore, detectRemoteConnection, inconsistentSections, functionScore, sectionsOverflow, overSized
+from PEFileAnalyzer.MalwareDefinition import inconsistentCompileDate, VTScore, get_size, detectRemoteConnection, inconsistentSections, stringsScore, functionScore, sectionsOverflow, overSized
 
 criterions=dict()
 
@@ -19,6 +20,7 @@ criterions['maliciousFunction']={'name':'Malicious Function(s)', 'function':'fun
 criterions['overSized']={'name':'Oversized File', 'function':'overSized', 'coef':30}
 # criterions['ipdetected']={'name':'IP Pattern Detected','function':'detectIP', 'coef':50}
 criterions['remoteconnection']={'name':'Remote Connection detected', 'function':'detectRemoteConnection', 'coef':70}
+criterions['maliciousStrings']={'name':'Malicious String(s)', 'function':'stringsScore', 'coef':70}
 
 def defaultCriterions():
 	return criterions
@@ -38,13 +40,16 @@ def execute_func(f, peData):
 		return globals()[f](peData.filename)
 	elif f == 'sectionsOverflow':
 		return globals()[f](peData.getSections())
+	elif f == 'stringsScore':
+		return globals()[f](peData.getDefStr(), peData.getStrings())
 
 class peData:
  	"""Analyze a PE file"""
- 	def __init__(self, filename, sign):
+ 	def __init__(self, filename, sign, strDict=None):
  		self.filename=filename
  		self.file = pefile.PE(filename)
  		self.signatures = peutils.SignatureDatabase(sign)
+ 		self.strDict=strDict
 
  	def getOEP(self):
  		return self.file.OPTIONAL_HEADER.AddressOfEntryPoint
@@ -74,6 +79,9 @@ class peData:
  		else:
  			return None
 
+ 	def getSize(self):
+ 		return get_size(self.filename)
+
  	def getExports(self):
  		listExports=[]
  		if hasattr(self.file, 'DIRECTORY_ENTRY_EXPORT'):
@@ -94,18 +102,30 @@ class peData:
  		strings=list()
  		f=open(self.filename,errors="ignore")
  		s=""
+ 		regS='\w{4,}'
+
  		for c in f.read():
  			if c in string.printable:
  				s+=c
  				continue
- 			if len(s)>=4:
+ 		
+ 			if re.match(regS, s, flags=re.IGNORECASE):
  				strings.append(s)
+ 		
  			s=""
+ 		
  		if len(s)>=4:
  			strings.append(s)
+
  		f.close()
 
  		return strings
+
+ 	def getDefStr(self):
+ 		return self.strDict
+
+ 	def setDefStr(self, d):
+ 		self.strDict=d
 
  	def getDate(self):
  		timestamp=self.file.FILE_HEADER.TimeDateStamp

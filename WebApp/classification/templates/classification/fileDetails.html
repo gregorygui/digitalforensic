@@ -20,6 +20,8 @@
 								<th>Packer</th>
 								<th>OEP</th>
 								<th>Compilation Date</th>
+								<th>Size</th>
+								<th>Analysis Duration</th>
 								<th>Maliciousness</th>
 							</tr>
 						</thead>
@@ -29,6 +31,8 @@
 								<td>{{file.packer}}</td>
 								<td>0x{{file.oep}}</td>
 								<td>{{file.compile_date}}</td>
+								<td>{{file.size}} bytes</td>
+								<td>{{file.anaTime}}s</td>
 								<td>
 									{% if file.maliciousness > 6 %}
 									<a class="text-danger" href="{% url 'classification:fileMaliciousness' file.md5 %}">
@@ -65,6 +69,7 @@
 				</div>
 				<div class="content">
 					<h3 class="title">Imports</h3>
+					<br/>
 					<div class="panel-group">
 						{% for i in imports %}
 						<div class="panel panel-default">
@@ -102,10 +107,11 @@
 					</table>
 				</div>
 			</div>
-			<!-- <div class="card">
+			<div class="card">
 				<div class="content">
-					<h3 class="title">Strings</h3>
-					<ul class="list-group">
+					<h3 class="title"><a data-toggle="collapse" href="#collapseStrings">Strings</a></h3>
+					<br/>
+					<ul class="list-group" id="collapseStrings" class="panel-collapse collapse">
 					{% for s in strings %}
 						<li class="list-group-item">
 						{{s.string}}
@@ -113,7 +119,7 @@
 					{% endfor %}
 					</ul>
 				</div>
-			</div> -->
+			</div>
 				<div class="clearfix">
 	    			<a href="{% url 'classification:index' %}"><button class="btn btn-default pull-right">Return</button></a>
 	    			<a href="{% url 'classification:delFile' file.md5 %}"><button class="btn btn-danger pull-right">Delete</button></a>

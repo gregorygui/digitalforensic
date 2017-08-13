@@ -30,7 +30,7 @@ def feature_importances(clf, features):
 	
 	for f in range(len(features)):
 		d[features[indices[f]]]=round(importances[indices[f]]*100, 2)
-		print("%d. feature %d - %s (%f)" % (f + 1, indices[f], features[indices[f]], importances[indices[f]]))
+		#print("%d. feature %d - %s (%f)" % (f + 1, indices[f], features[indices[f]], importances[indices[f]]))
 
 	return sorted(d.items(), key=itemgetter(1), reverse=True)
 

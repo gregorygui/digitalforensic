@@ -2,16 +2,22 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.conf import settings
 
-from .forms import HashForm, URLForm, FileForm, AlgoRFForm, AlgoNBForm
+from .forms import HashForm, URLForm, FileForm, AlgoRFForm, AlgoNBForm, StringsForm
 
-from .models import File, FileImport, FileFct, FileSection, FileExport, FileCriterion, DefaultCriterion
+from .models import File, FileImport, FileFct, FileSection, FileExport, FileCriterion, DefaultCriterion, DefaultStrings
 
 from PEFileAnalyzer import handle_uploaded_file, VTHash, VTUrl, VTFile, peData, defaultCriterions
 from MachineLearning import RandomForest, Bayesian, build_dataset, feature_importances
 
 import os
 import uuid
+import time
 
+def makeDict(qset):
+    d=dict()
+    for q in qset:
+        d[q.string]=q.imp
+    return d
 
 def index(request):
     tot=File.objects.all()
@@ -65,9 +71,10 @@ def addNewFiles(request):
 
         if form.is_valid():
             for fi in files:
+                start = time.clock()
                 f=handle_file(fi)
 
-                ana=peData(os.path.join(settings.PROJECT_ROOT, f), os.path.join(settings.PROJECT_ROOT, 'userdb.txt'))
+                ana=peData(os.path.join(settings.PROJECT_ROOT, f), os.path.join(settings.PROJECT_ROOT, 'userdb.txt'), makeDict(DefaultStrings.objects.all()))
                 md5=ana.getMD5()
 
                 try:
@@ -82,7 +89,8 @@ def addNewFiles(request):
                         compile_date=ana.getDate(),
                         packer=ana.isPacked(),
                         entropy=ana.getEntropy(),
-                        oep=ana.getOEP()
+                        oep=ana.getOEP(),
+                        size=ana.getSize()
                         )
 
                     file.save()
@@ -120,6 +128,8 @@ def addNewFiles(request):
                     else:
                         file.maliciousness=0
 
+                    file.anaTime=round(time.clock()-start, 2)
+
                     file.save()
                     
                     try:
@@ -138,11 +148,34 @@ def delFile(request, file_hash):
     file.delete()
     return redirect('classification:filesView')
 
+def delString(request, str_id):
+    string = DefaultStrings.objects.get(id=str_id)
+    string.delete()
+    return redirect('classification:parametersStrings')
+
 def informations(request):
     return render(request, 'classification/informations.html', {'title':"Informations"})
 
 def parameters(request):
     return render(request, 'classification/parameters.html', {'title':"Parameters"})
+
+def parametersStrings(request):
+
+    context={
+    'title':'Malicious Strings Definition',
+    'formStrings':StringsForm
+    }
+
+    if request.method == 'POST':
+        formStr = StringsForm(request.POST)
+
+        if formStr.is_valid():
+            DefaultStrings.objects.get_or_create(string=formStr.cleaned_data['string'], imp=formStr.cleaned_data['imp'])
+            context['title']+=' - \"'+formStr.cleaned_data['string']+'\" was added...'
+
+    context['strings']=DefaultStrings.objects.all().order_by('string')
+
+    return render(request, 'classification/parametersStrings.html', context)
 
 def parametersCriterions(request):
 
