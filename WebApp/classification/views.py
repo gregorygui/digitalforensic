@@ -12,6 +12,8 @@ from MachineLearning import RandomForest, Bayesian, build_dataset, feature_impor
 import os
 import uuid
 import time
+import re
+from decimal import Decimal
 
 def makeDict(qset):
     d=dict()
@@ -150,6 +152,7 @@ def delFile(request, file_hash):
 
 def delString(request, str_id):
     string = DefaultStrings.objects.get(id=str_id)
+    update_strings(string.string, string.imp, 'neg')
     string.delete()
     return redirect('classification:parametersStrings')
 
@@ -205,6 +208,38 @@ def results(request):
 
     return render(request, 'classification/results.html', context)
 
+def update_strings(val, imp, op):
+    regex='(?:'+val+')'
+
+    for f in File.objects.all():
+        
+        strTot=f.filestrings_set.all()
+        
+        for s in strTot:
+            
+            if re.match(regex, s.string, flags=re.IGNORECASE):
+
+                crit=f.filecriterion_set.get_or_create(name='Malicious String(s)', coef=70)
+
+                if 'neg' in op:
+                    (crit[0]).score-=Decimal(imp/len(DefaultStrings.objects.all()))
+                elif 'pos' in op:
+                    (crit[0]).score+=Decimal(imp/len(DefaultStrings.objects.all()))
+                
+                crit[0].save()
+               
+                v=0
+                t=0
+                
+                for c in f.filecriterion_set.all():
+                    v+=(c.score*c.coef)
+                    t+=c.coef
+
+                f.maliciousness=round(v/t, 2)
+                f.save()
+
+                break
+
 def parametersStrings(request):
 
     context={
@@ -217,6 +252,7 @@ def parametersStrings(request):
 
         if formStr.is_valid():
             DefaultStrings.objects.get_or_create(string=formStr.cleaned_data['string'], imp=formStr.cleaned_data['imp'])
+            update_strings(formStr.cleaned_data['string'], formStr.cleaned_data['imp'], 'pos')
             context['title']+=' - \"'+formStr.cleaned_data['string']+'\" was added...'
 
     context['strings']=DefaultStrings.objects.all().order_by('string')

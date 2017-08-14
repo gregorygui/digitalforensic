@@ -58,7 +58,7 @@ class FileStrings(models.Model):
 class FileCriterion(models.Model):
 	file=models.ForeignKey(File, on_delete=models.CASCADE)
 	name=models.CharField(max_length=100)
-	score=models.PositiveSmallIntegerField(default=0)
+	score=models.DecimalField(max_digits=4, decimal_places=2, default=0)
 	coef=models.PositiveSmallIntegerField(default=0)
 
 class DefaultCriterion(models.Model):
