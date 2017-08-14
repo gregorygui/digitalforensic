@@ -6,7 +6,7 @@ from .forms import HashForm, URLForm, FileForm, AlgoRFForm, AlgoNBForm, StringsF
 
 from .models import File, FileImport, FileFct, FileSection, FileExport, FileCriterion, DefaultCriterion, DefaultStrings
 
-from PEFileAnalyzer import handle_uploaded_file, VTHash, VTUrl, VTFile, peData, defaultCriterions
+from PEFileAnalyzer import handle_uploaded_file, VTHash, VTUrl, VTFile, peData, defaultCriterions, StatBuilder
 from MachineLearning import RandomForest, Bayesian, build_dataset, feature_importances
 
 import os
@@ -159,6 +159,52 @@ def informations(request):
 def parameters(request):
     return render(request, 'classification/parameters.html', {'title':"Parameters"})
 
+def stat():
+
+    d=dict()
+    lsize=[]
+    lmal=[]
+    lsect=[]
+    ldur=[]
+    nbPacked=0
+    
+    d['f']=len(File.objects.all())
+    d['m']=len(File.objects.filter(maliciousness__gt=6))
+    d['s']=d['f']-d['m']
+
+    for f in File.objects.all():
+        lsize.append(f.size)
+        lmal.append(f.maliciousness)
+        lsect.append(len(f.filesection_set.all()))
+        ldur.append(f.anaTime)
+
+        if ('None' or 'C++' or '.Net') not in f.packer:
+            nbPacked+=1
+
+    d['pack']=nbPacked
+
+    d['size']=lsize
+    d['mal']=lmal
+    d['nbsect']=lsect
+    d['dur']=ldur
+
+    return d
+
+def results(request):
+    s=StatBuilder(stat())
+
+    context={
+    'title':'Application Statistics',
+    'fstat':s.fileStatistics(),
+    'structstat':s.structStatistics(),
+    'malstat':s.malStatistics(),
+    'durstat':s.durStatistics(),
+    'astat':s.anaStatistics(),
+    'lstat':s.learningStatistics()
+    }
+
+    return render(request, 'classification/results.html', context)
+
 def parametersStrings(request):
 
     context={
@@ -286,7 +332,7 @@ def malwaresView(request):
     return render(request, 'classification/filesList.html', context)
 
 def filesView(request):
-    files = File.objects.all().order_by('-added_date')[:10]
+    files = File.objects.all().order_by('-added_date')
     context={
     'title':"Last Analyses",
     'files':files

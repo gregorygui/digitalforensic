@@ -8,11 +8,12 @@ app_name= 'classification'
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^informations/$', views.informations, name='informations'),
+    url(r'^results/$', views.results, name='results'),
 
     url(r'^parameters/$', views.parameters, name='parameters'),
     url(r'^parameters/criterions/$', views.parametersCriterions, name='parametersCriterions'),
-    url(r'^parameters/malware_decision/$', views.parametersLearning, name='parametersLearning'),
-    url(r'^parameters/malware_decision/train/$', views.performTraining, name='performTraining'),
+    url(r'^parameters/learning/$', views.parametersLearning, name='parametersLearning'),
+    url(r'^parameters/learning/train/$', views.performTraining, name='performTraining'),
     url(r'^parameters/strings/$', views.parametersStrings, name='parametersStrings'),
     url(r'^parameters/strings/delete/(?P<str_id>[0-9]+)$', views.delString, name='delString'),
 
