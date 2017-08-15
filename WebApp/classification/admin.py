@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import File, FileSection, FileImport, FileExport, FileStrings, FileCriterion, DefaultCriterion, DefaultStrings
+from .models import File, FileSection, FileImport, FileExport, FileStrings, FileCriterion, DefaultCriterion, DefaultStrings, Analysis, AnalysisFigures
 
 class FileSectionInline(admin.TabularInline):
 	model=FileSection
@@ -50,3 +50,16 @@ class DefaultStringsAdmin(admin.ModelAdmin):
 	list_filter=('string', 'imp')
 
 admin.site.register(DefaultStrings, DefaultStringsAdmin)
+
+class AnalysisFiguresInline(admin.TabularInline):
+	model=AnalysisFigures
+	extra=2
+
+#admin.site.register(FileStrings, FileStringsAdmin)
+
+class AnalysisAdmin(admin.ModelAdmin):
+	list_display=('date', 'algoname', 'args', 'duration')
+	list_filter=('algoname', 'date')
+	inlines=[AnalysisFiguresInline]
+
+admin.site.register(Analysis, AnalysisAdmin)

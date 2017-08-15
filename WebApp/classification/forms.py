@@ -16,7 +16,8 @@ class AlgoRFForm(forms.Form):
 		('gini', 'Gini'),
 		('entropy', 'Entropy'))
 	criterion = forms.ChoiceField(label='Function to measure the quality of a split', choices=CHOICES)
-	bootstrap = forms.BooleanField(label='Bootstrap', initial=True)
+	bootstrap = forms.BooleanField(label='Bootstrap', required=False, initial=True)
+	weighted = forms.BooleanField(label='Weighted', required=False, initial=True)
 
 class AlgoNBForm(forms.Form):
 	alpha = forms.FloatField(label='Additive smoothing parameter (alpha)', initial=1.0, min_value=0, max_value=10.0, widget=forms.TextInput(attrs={'class':'form-control'}))

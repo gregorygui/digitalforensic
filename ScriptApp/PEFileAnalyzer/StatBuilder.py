@@ -34,7 +34,7 @@ class StatBuilder(object):
         d['Variance']=round(pvariance(s), 2)
         d['Min']=min(s)
         d['Max']=max(s)
-        d['Mode']=round(mode(s), 2)
+        d['Mode']=round(max(set(s),key=s.count), 2)
 
         return d
 
@@ -53,10 +53,10 @@ class StatBuilder(object):
 
         s=self.stat['dur']
 
-        d['Mean']=round(mean(s), 2)
-        d['Variance']=round(pvariance(s), 2)
-        d['Min']=min(s)
-        d['Max']=max(s)
-        d['Mode']=round(mode(s), 2)
+        d['Mean']=str(round(mean(s), 2))+'s'
+        d['Variance']=str(round(pvariance(s), 2))+'s'
+        d['Min']=str(min(s))+'s'
+        d['Max']=str(max(s))+'s'
+        d['Mode']=str(round(mode(s), 2))+'s'
 
         return d

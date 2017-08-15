@@ -1,4 +1,4 @@
-{%load static%}
+{% load static %}
 
 <!doctype html>
 <html lang="en">
@@ -77,17 +77,17 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'classification:results' %}">
-                        <i class="pe-7s-graph1"></i>
-                        <p>Results</p>
-                    </a>
-                </li>
-                <!-- <li>
-                    <a href="#">
+                    <a href="{% url 'classification:statistics' %}">
                         <i class="pe-7s-graph1"></i>
                         <p>Statistics</p>
                     </a>
-                </li> -->
+                </li>
+                <li>
+                    <a href="{% url 'classification:results' %}">
+                        <i class="pe-7s-science"></i>
+                        <p>Results</p>
+                    </a>
+                </li>
                 <li>
                     <a href="{% url 'classification:parameters' %}">
                         <i class="pe-7s-tools"></i>

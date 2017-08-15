@@ -1,106 +1,80 @@
 {% extends 'classification/DashboardStruct.html' %}
 {% block body %}
+{% load extras %}
 <div class="row">
 	<div class="container-fluid">
-		<div class="col-md-6">
+		<div class="col-md-12">
 			<div class="card">
 				<div class="header">
-					<h4 class="title">Files</h4>
+					<h3 class="title">Global Results</h3>
+					<small>X trainings in total</small>
 				</div>
 				<div class="content">
-					<table class="table table-hover">
-						<thead>
-								<tr>
-									<th>Name</th>
-									<th>Number</th>
-								</tr>
-						</thead>
-						<tbody>
-							{% for k,v in fstat.items %}
-							<tr>
-								<td>{{k}}</td>
-								<td>{{v}}</td>
-							</tr>
-							{% endfor %}
-						</tbody>
-					</table>
+					
 				</div>
 			</div>
 			<div class="card">
 				<div class="header">
-					<h4 class="title">Duration</h4>
+					<h3 class="title">Previous Results</h3>
 				</div>
 				<div class="content">
-					<table class="table table-hover">
-						<thead>
-								<tr>
-									<th>Name</th>
-									<th>Number</th>
-								</tr>
-						</thead>
-						<tbody>
-							{% for k,v in durstat.items %}
-							<tr>
-								<td>{{k}}</td>
-								<td>{{v}}</td>
-							</tr>
-							{% endfor %}
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="card">
-				<div class="header">
-					<h4 class="title">Structure</h4>
-				</div>
-				<div class="content">
-					<table class="table table-hover">
-						<thead>
-								<tr>
-									<th>Name</th>
-									<th>Number</th>
-								</tr>
-						</thead>
-						<tbody>
-							{% for k,v in structstat.items %}
-							<tr>
-								<td>{{k}}</td>
-								<td>{{v}}</td>
-							</tr>
-							{% endfor %}
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="card">
-				<div class="header">
-					<h4 class="title">Maliciousness</h4>
-				</div>
-				<div class="content">
-					<table class="table table-hover">
-						<thead>
-								<tr>
-									<th>Name</th>
-									<th>Number</th>
-								</tr>
-						</thead>
-						<tbody>
-							{% for k,v in malstat.items %}
-							<tr>
-								<td>{{k}}</td>
-								<td>{{v}}</td>
-							</tr>
-							{% endfor %}
-						</tbody>
-					</table>
+					<div class="panel-group">
+						{% for a in analysis %}
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h5 class="panel-title">
+									<a data-toggle="collapse" href="#collapse{{ forloop.counter }}">{{a.id}} - {{a.date}} ({{a.duration}}s)</a>
+								</h5>
+							</div>
+							<div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
+								<table>
+									<thead>
+										<tr>
+											<td>Number of Files</td>
+											<td>Goodware</td>
+											<td>Malware</td>
+											<td>Training Samples</td>
+											<td>Testing Samples</td>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>{{a.files}}</td>
+											<td>{% sub a.files a.malware %}</td>
+											<td>{{a.malware}}</td>
+											<td>{{a.train}}</td>
+											<td>{% sub a.files a.train %}</td>
+										</tr>
+									</tbody>
+								</table>
+								<table>
+									<thead>
+										<tr>
+											<td>Name</td>
+											<td>Argument</td>
+											<td>Value</td>
+										</tr>
+									</thead>
+									<tbody>
+										{% for f in a.analysisfigures_set.all %}
+										<tr>
+											<td>{{f.name}}</td>
+											<td>{{f.arg}}</td>
+											<td>{{f.value}}</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+								<a href="#"><button class="btn btn-default pull-right">CSV File</button></a>
+							</div>
+						</div>
+						{% endfor %}
+					</div>
 				</div>
 			</div>
 			<div class="clearfix">
 	    		<a href="{% url 'classification:index' %}"><button class="btn btn-default pull-right">Return</button></a>
-	    	</div>
+			</div>
 		</div>
 	</div>
 </div>

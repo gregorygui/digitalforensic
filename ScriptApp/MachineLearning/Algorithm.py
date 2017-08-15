@@ -2,7 +2,6 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
-from sklearn.datasets import load_iris
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import BernoulliNB
 
@@ -34,9 +33,12 @@ def feature_importances(clf, features):
 
 	return sorted(d.items(), key=itemgetter(1), reverse=True)
 
-def RandomForest(ds,t,c,b):
-	
+def RandomForest(ds,t,c,b,w):
 	clf = RandomForestClassifier(n_estimators=t, criterion=c, bootstrap=b)
+	
+	if w:
+		clf.set_params(class_weight='balanced')
+
 	clf.fit(ds['data'], ds['targets'])
 	
 	return clf

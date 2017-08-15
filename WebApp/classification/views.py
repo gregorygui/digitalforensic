@@ -4,7 +4,7 @@ from django.conf import settings
 
 from .forms import HashForm, URLForm, FileForm, AlgoRFForm, AlgoNBForm, StringsForm
 
-from .models import File, FileImport, FileFct, FileSection, FileExport, FileCriterion, DefaultCriterion, DefaultStrings
+from .models import File, FileImport, FileFct, FileSection, FileExport, FileCriterion, DefaultCriterion, DefaultStrings, Analysis
 
 from PEFileAnalyzer import handle_uploaded_file, VTHash, VTUrl, VTFile, peData, defaultCriterions, StatBuilder
 from MachineLearning import RandomForest, Bayesian, build_dataset, feature_importances
@@ -177,9 +177,14 @@ def stat():
 
     for f in File.objects.all():
         lsize.append(f.size)
-        lmal.append(f.maliciousness)
+
+        if f.maliciousness > 0:
+            lmal.append(f.maliciousness)
+        
         lsect.append(len(f.filesection_set.all()))
-        ldur.append(f.anaTime)
+        
+        if f.anaTime > 0:
+            ldur.append(f.anaTime)
 
         if ('None' or 'C++' or '.Net') not in f.packer:
             nbPacked+=1
@@ -193,7 +198,7 @@ def stat():
 
     return d
 
-def results(request):
+def statistics(request):
     s=StatBuilder(stat())
 
     context={
@@ -206,6 +211,12 @@ def results(request):
     'lstat':s.learningStatistics()
     }
 
+    return render(request, 'classification/statistics.html', context)
+
+def results(request):
+    context={
+    'title':'Learning Results'
+    }
     return render(request, 'classification/results.html', context)
 
 def update_strings(val, imp, op):
@@ -306,9 +317,21 @@ def performTraining(request):
             trees=formRF.cleaned_data['trees']
             criterion=formRF.cleaned_data['criterion']
             bootstrap=formRF.cleaned_data['bootstrap']
-            clf = RandomForest(dataset, trees, criterion, bootstrap)
+            weight = formRF.cleaned_data['weighted']
+            start = time.clock()
+            clf = RandomForest(dataset, trees, criterion, bootstrap, weight)
             context['title']+='Random Forest'
             context['fimp']=feature_importances(clf, dataset['features_names'])
+
+            ana=Analysis.objects.create(
+                        algoname='Random Forest',
+                        args='Trees: '+str(trees)+', Bootstrap: '+str(bootstrap)+', Weighted: '+str(weight)+', Splitting: '+str(criterion),
+                        files=len(dataset['data']),
+                        duration=round(time.clock()-start, 2),
+                        malware=len(dataset['data'])
+                        )
+
+            ana.save()
 
         elif formNB.is_valid():
             alpha=formNB.cleaned_data['alpha']

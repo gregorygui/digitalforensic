@@ -8,6 +8,7 @@ app_name= 'classification'
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^informations/$', views.informations, name='informations'),
+    url(r'^statistics/$', views.statistics, name='statistics'),
     url(r'^results/$', views.results, name='results'),
 
     url(r'^parameters/$', views.parameters, name='parameters'),

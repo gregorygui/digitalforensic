@@ -1,12 +1,20 @@
 import sqlite3
 import numpy as np
 
+def dictTreatment(c):
+	d=dict()
+
+	for v in c.fetchall():
+		d[v[0]]=v[1]
+
+	return d
+
 def listTreatment(c):
 	l=[]
 
 	for v in c.fetchall():
 		l+=v
-	
+
 	return l
 
 def get_default_criterion(c):
@@ -18,9 +26,9 @@ def get_default_criterion(c):
 def get_criterions(c, fid):
 	l=[]
 	t=(fid,)
-	c.execute("SELECT name FROM classification_filecriterion WHERE file_id=?", t)
+	c.execute("SELECT name, score FROM classification_filecriterion WHERE file_id=?", t)
 
-	return listTreatment(c)
+	return dictTreatment(c)
 
 def get_files(c):
 	l=[]
@@ -43,11 +51,12 @@ def get_data(c):
 	data = {}
 	ar=[]
 	targets = []
+
 	for fid in get_files(c):
 		row = [0] * len(dc)
-		
-		for crit in get_criterions(c, fid):
-			row[dc.index(crit)]=1
+		fc=get_criterions(c, fid)
+		for crit in fc:
+			row[dc.index(crit)]=fc[crit]
 
 		ar.append(row)
 
@@ -58,6 +67,7 @@ def get_data(c):
 
 	data['data']=ar
 	data['targets']=targets
+	
 	return data
 
 def build_dataset(d):

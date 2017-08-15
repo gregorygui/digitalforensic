@@ -74,3 +74,19 @@ class DefaultStrings(models.Model):
 	average=models.DecimalField(max_digits=4, decimal_places=2, default=0)
 	nbFiles=models.PositiveSmallIntegerField(default=0)
 	nbMalwares=models.PositiveSmallIntegerField(default=0)
+
+class Analysis(models.Model):
+	date=models.DateTimeField(auto_now_add=True)
+	algoname=models.CharField(max_length=200)
+	args=models.CharField(max_length=300)
+	duration=models.DecimalField(max_digits=4, decimal_places=2, default=0)
+	files=models.PositiveSmallIntegerField(default=0)
+	malware=models.PositiveSmallIntegerField(default=0)
+	train=models.PositiveSmallIntegerField(default=0)
+	result=models.CharField(max_length=100)
+
+class AnalysisFigures(models.Model):
+	analysis=models.ForeignKey(Analysis, on_delete=models.CASCADE)
+	name=models.CharField(max_length=200)
+	arg=models.CharField(max_length=300)
+	value=models.DecimalField(max_digits=4, decimal_places=2, default=0)

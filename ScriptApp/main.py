@@ -20,7 +20,7 @@ def machineLearning(dbname):
 	try:
 		print("Building dataset...")
 		dataset = build_dataset(dbname)
-		rf = RandomForest(dataset, 10, 'gini', True)
+		rf = RandomForest(dataset, 10, 'gini', True, True)
 		feature_importances(rf, dataset['features_names'])
 		print("nb of samples: "+str(len(dataset['data'])))
 		# plt=figure_feature_importances(rf, dataset['features_names'])
