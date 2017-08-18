@@ -289,19 +289,6 @@ def parametersCriterionsDetails(request, id):
     return render(request, 'classification/filesList.html', context)
 
 def parametersLearning(request):
-
-    context={
-    'title':"Learning Algorithm Parameters",
-    'nbFiles':len(File.objects.all()),
-    'nbSafe':len(File.objects.all())-len(File.objects.filter(maliciousness__gt=6)),
-    'nbMal':len(File.objects.filter(maliciousness__gt=6)),
-    'formRF':AlgoRFForm(),
-    'formNB':AlgoNBForm()
-    }
-
-    return render(request, 'classification/parametersLearning.html', context)
-
-def performTraining(request):
     if request.method == 'POST':
 
         formRF = AlgoRFForm(request.POST)
@@ -332,31 +319,34 @@ def performTraining(request):
                         )
 
             ana.save()
+            
+            context.update({'clf':clf})
+
+            return render(request, 'classification/resultTraining.html', context)
 
         elif formNB.is_valid():
             alpha=formNB.cleaned_data['alpha']
             clf = Bayesian(dataset, alpha)
             context['title']+='Naive Bayes'
 
-        else:
-            return HttpResponseRedirect('/parameters/malware_decision/')
+            context.update({'clf':clf})
 
-        context.update({'clf':clf})
+            return render(request, 'classification/resultTraining.html', context)
 
-        return render(request, 'classification/resultTraining.html', context)
+    context={
+    'title':"Learning Algorithm Parameters",
+    'nbFiles':len(File.objects.all()),
+    'nbSafe':len(File.objects.all())-len(File.objects.filter(maliciousness__gt=6)),
+    'nbMal':len(File.objects.filter(maliciousness__gt=6)),
+    'formRF':AlgoRFForm(),
+    'formNB':AlgoNBForm()
+    }
 
-    else:
-        return HttpResponseRedirect('/parameters/malware_decision/')
+    return render(request, 'classification/parametersLearning.html', context)
 
 def virusTotal(request):
-    formU = URLForm()
-    formH = HashForm()
-    formF = FileForm()
-    return render(request, 'classification/virusTotal.html', {'title':"Virus Total Toolkit", 'formhash':formH, 'formURL':formU, 'formfile':formF})
 
-def analyzeVT(request):
     if request.method == 'POST':
-        
         formH = HashForm(request.POST)
         formU = URLForm(request.POST)
         formF = FileForm(request.POST, request.FILES)
@@ -376,27 +366,34 @@ def analyzeVT(request):
         elif formF.is_valid():
             f=handle_uploaded_file(request.FILES['f'])
             return render(request, 'classification/analyzeVT.html', {'title':name, 'res':VTFile(f)})
+
+    formU = URLForm()
+    formH = HashForm()
+    formF = FileForm()
+    
+    return render(request, 'classification/virusTotal.html', {'title':"Virus Total Toolkit", 'formhash':formH, 'formURL':formU, 'formfile':formF})
+
+def listFiles(request, action):
+
+    if action == 'malware':
+        files = File.objects.filter(maliciousness__gt=6).order_by('-added_date')
         
-        else:
-        	return HttpResponseRedirect('/')
+        context={
+        'title':"Malware Profiles",
+        'files':files
+        }
+
+        return render(request, 'classification/filesList.html', context)
+
     else:
-    	return HttpResponseRedirect('/')
+        files = File.objects.all().order_by('-added_date')
+        
+        context={
+        'title':"Last Analyses",
+        'files':files
+        }
 
-def malwaresView(request):
-    files = File.objects.filter(maliciousness__gt=6).order_by('-added_date')
-    context={
-    'title':"Malware Profiles",
-    'files':files
-    }
-    return render(request, 'classification/filesList.html', context)
-
-def filesView(request):
-    files = File.objects.all().order_by('-added_date')
-    context={
-    'title':"Last Analyses",
-    'files':files
-    }
-    return render(request, 'classification/filesList.html', context)
+        return render(request, 'classification/filesList.html', context)
 
 def fileDetails(request, file_hash):
     file = File.objects.get(md5=file_hash)

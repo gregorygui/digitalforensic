@@ -8,7 +8,7 @@
 					<h4 class="title">Analyze a file</h4>
 				</div>
 				<div class="content">
-					<form action="{% url 'classification:analyzeVT' %}" method="post">
+					<form action="#" method="post">
 						{% csrf_token %}
     					{{ formfile }}
     					<div class="clearfix">
@@ -28,7 +28,7 @@
 					<h4 class="title">Analyze an URL</h4>
 				</div>
 				<div class="content">
-					<form action="{% url 'classification:analyzeVT' %}" method="post">
+					<form action="#" method="post">
 						{% csrf_token %}
 						{{ formURL }}
 	    				<div class="clearfix">
@@ -48,7 +48,7 @@
 					<h4 class="title">Analyze a Hash</h4>
 				</div>
 				<div class="content">
-					<form action="{% url 'classification:analyzeVT' %}" method="post">
+					<form action="#" method="post">
     					{% csrf_token %}
     					{{ formhash }}
     					<div class="clearfix">
