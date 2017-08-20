@@ -11,6 +11,7 @@ class File(models.Model):
 	compile_date=models.DateTimeField()
 	added_date=models.DateTimeField(auto_now_add=True)
 	maliciousness=models.DecimalField(max_digits=3, decimal_places=2, default=0)
+	ismal=models.BooleanField(default=False)
 	entropy=models.DecimalField(max_digits=4, decimal_places=2, default=0)
 	oep=models.IntegerField(default=0)
 	size=models.IntegerField(default=0)
@@ -20,7 +21,7 @@ class File(models.Model):
 		return (packer!=null)
 
 	def isMalicious(self):
-		return self.maliciousness>6
+		return ismal
 	
 	isMalicious.boolean = True
 	isMalicious.short_description = 'Is Malicious?'
@@ -59,11 +60,9 @@ class FileCriterion(models.Model):
 	file=models.ForeignKey(File, on_delete=models.CASCADE)
 	name=models.CharField(max_length=100)
 	score=models.DecimalField(max_digits=4, decimal_places=2, default=0)
-	coef=models.PositiveSmallIntegerField(default=0)
 
 class DefaultCriterion(models.Model):
 	name=models.CharField(max_length=100)
-	coef=models.PositiveSmallIntegerField(default=0)
 	average=models.DecimalField(max_digits=4, decimal_places=2, default=0)
 	nbFiles=models.PositiveSmallIntegerField(default=0)
 	nbMalwares=models.PositiveSmallIntegerField(default=0)

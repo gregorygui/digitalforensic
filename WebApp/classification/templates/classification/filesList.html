@@ -17,6 +17,7 @@
 								<th>Analysis Duration</th>
 								<th>Added date</th>
 								<th>Maliciousness</th>
+								<th>Is a Malware ?</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -37,6 +38,13 @@
 									{% endif %}
 									{{f.maliciousness}}
 									</a>
+								</td>
+								<td>
+									{% if file.ismal %}
+									<div class="text-danger">True</div>
+									{% else %}
+									<div class="text-success">False</div>
+									{% endif %}
 								</td>
 							</tr>
 							{% endfor %}

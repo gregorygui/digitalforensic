@@ -122,9 +122,12 @@ def VTFile(filename):
 
 def VTUrl(url):
 	resp=getVTReport(url)
+
 	if not resp:
 		resp=scanVTURL(url)
+
 	resp=extractInfo(resp)
+
 	return getDetailedURL(resp)
 
 def handle_uploaded_file(f):

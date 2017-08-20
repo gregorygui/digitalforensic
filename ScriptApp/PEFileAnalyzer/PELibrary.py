@@ -13,14 +13,13 @@ from PEFileAnalyzer.MalwareDefinition import inconsistentCompileDate, VTScore, g
 
 criterions=dict()
 
-criterions['compileDate']={'name':'Inconsistent Compilation Date','function':'inconsistentCompileDate', 'coef':90}
-criterions['VTScore']={'name':'Virus Total Score', 'function':'VTScore', 'coef':80}
-criterions['inconsistentSections']={'name':'Inconsistent Section Name(s)', 'function':'inconsistentSections', 'coef':60}
-criterions['maliciousFunction']={'name':'Malicious Function(s)', 'function':'functionScore', 'coef':70}
-criterions['overSized']={'name':'Oversized File', 'function':'overSized', 'coef':30}
-# criterions['ipdetected']={'name':'IP Pattern Detected','function':'detectIP', 'coef':50}
-criterions['remoteconnection']={'name':'Remote Connection detected', 'function':'detectRemoteConnection', 'coef':70}
-criterions['maliciousStrings']={'name':'Malicious String(s)', 'function':'stringsScore', 'coef':70}
+criterions['compileDate']={'name':'Inconsistent Compilation Date','function':'inconsistentCompileDate'}
+criterions['VTScore']={'name':'Virus Total Score', 'function':'VTScore'}
+criterions['inconsistentSections']={'name':'Inconsistent Section Name(s)', 'function':'inconsistentSections'}
+criterions['maliciousFunction']={'name':'Malicious Function(s)', 'function':'functionScore'}
+criterions['overSized']={'name':'Oversized File', 'function':'overSized'}
+criterions['remoteconnection']={'name':'Remote Connection detected', 'function':'detectRemoteConnection'}
+criterions['maliciousStrings']={'name':'Malicious String(s)', 'function':'stringsScore'}
 
 def defaultCriterions():
 	return criterions

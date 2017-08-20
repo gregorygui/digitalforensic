@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.conf import settings
 
-from .forms import HashForm, URLForm, FileForm, AlgoRFForm, AlgoNBForm, StringsForm
+from .forms import HashForm, URLForm, FileForm, AlgoRFForm, AlgoNBForm, StringsForm, IndexForm
 
 from .models import File, FileImport, FileFct, FileSection, FileExport, FileCriterion, DefaultCriterion, DefaultStrings, Analysis
 
@@ -25,7 +25,7 @@ def index(request):
     tot=File.objects.all()
     
     if len(tot)>0:
-        pct=len(File.objects.filter(maliciousness__gt=6))*100/len(File.objects.all())
+        pct=len(File.objects.filter(ismal=True))*100/len(File.objects.all())
         pct=round(pct,2)
     else:
         pct=0
@@ -33,9 +33,9 @@ def index(request):
     context={
     'title':"Dashboard",
     'nbfiles':len(File.objects.all()),
-    'nbmalwares':len(File.objects.filter(maliciousness__gt=6)),
+    'nbmalwares':len(File.objects.filter(ismal=True)),
     'percentmal':pct,
-    'form':FileForm()
+    'form':IndexForm()
     }
     return render(request, 'classification/index.html', context)
 
@@ -57,7 +57,7 @@ def updateDefaultCriterions():
             tot=0
             
             d.nbFiles=len(crit)
-            d.nbMalwares=len(File.objects.filter(maliciousness__gt=6).filter(filecriterion__name=d.name))
+            d.nbMalwares=len(File.objects.filter(ismal=True).filter(filecriterion__name=d.name))
             
             for i in crit:
                 tot+=i.score
@@ -68,7 +68,7 @@ def updateDefaultCriterions():
 
 def addNewFiles(request):
     if request.method == 'POST':
-        form=FileForm(request.POST, request.FILES)
+        form=IndexForm(request.POST, request.FILES)
         files=request.FILES.getlist('f')
 
         if form.is_valid():
@@ -92,7 +92,8 @@ def addNewFiles(request):
                         packer=ana.isPacked(),
                         entropy=ana.getEntropy(),
                         oep=ana.getOEP(),
-                        size=ana.getSize()
+                        size=ana.getSize(),
+                        ismal=form.cleaned_data['mal']
                         )
 
                     file.save()
@@ -120,10 +121,10 @@ def addNewFiles(request):
 
                     for c in crit:
                         val=crit[c]
-                        DefaultCriterion.objects.get_or_create(name=val['name'], coef=val['coef'])
-                        file.filecriterion_set.create(name=val['name'], score=val['score'], coef=val['coef'])
-                        mal+=val['score']*val['coef']
-                        coefTot+=val['coef']
+                        DefaultCriterion.objects.get_or_create(name=val['name'])
+                        file.filecriterion_set.create(name=val['name'], score=val['score'])
+                        mal+=val['score']
+                        coefTot+=1
 
                     if coefTot > 0:
                         file.maliciousness=round(mal/coefTot, 2)
@@ -148,7 +149,7 @@ def addNewFiles(request):
 def delFile(request, file_hash):
     file = File.objects.get(md5=file_hash)
     file.delete()
-    return redirect('classification:filesView')
+    return redirect('classification:list', action='files')
 
 def delString(request, str_id):
     string = DefaultStrings.objects.get(id=str_id)
@@ -172,7 +173,7 @@ def stat():
     nbPacked=0
     
     d['f']=len(File.objects.all())
-    d['m']=len(File.objects.filter(maliciousness__gt=6))
+    d['m']=len(File.objects.filter(ismal=True))
     d['s']=d['f']-d['m']
 
     for f in File.objects.all():
@@ -230,7 +231,7 @@ def update_strings(val, imp, op):
             
             if re.match(regex, s.string, flags=re.IGNORECASE):
 
-                crit=f.filecriterion_set.get_or_create(name='Malicious String(s)', coef=70)
+                crit=f.filecriterion_set.get_or_create(name='Malicious String(s)')
 
                 if 'neg' in op:
                     (crit[0]).score-=Decimal(imp/len(DefaultStrings.objects.all()))
@@ -240,13 +241,11 @@ def update_strings(val, imp, op):
                 crit[0].save()
                
                 v=0
-                t=0
                 
                 for c in f.filecriterion_set.all():
-                    v+=(c.score*c.coef)
-                    t+=c.coef
+                    v+=c.score
 
-                f.maliciousness=round(v/t, 2)
+                f.maliciousness=round(v/len(f.filecriterion_set.all()), 2)
                 f.save()
 
                 break
@@ -336,8 +335,8 @@ def parametersLearning(request):
     context={
     'title':"Learning Algorithm Parameters",
     'nbFiles':len(File.objects.all()),
-    'nbSafe':len(File.objects.all())-len(File.objects.filter(maliciousness__gt=6)),
-    'nbMal':len(File.objects.filter(maliciousness__gt=6)),
+    'nbSafe':len(File.objects.all())-len(File.objects.filter(ismal=True)),
+    'nbMal':len(File.objects.filter(ismal=True)),
     'formRF':AlgoRFForm(),
     'formNB':AlgoNBForm()
     }
@@ -376,7 +375,7 @@ def virusTotal(request):
 def listFiles(request, action):
 
     if action == 'malware':
-        files = File.objects.filter(maliciousness__gt=6).order_by('-added_date')
+        files = File.objects.filter(ismal=True).order_by('-added_date')
         
         context={
         'title':"Malware Profiles",

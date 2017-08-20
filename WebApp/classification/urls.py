@@ -7,6 +7,7 @@ from .chartsBuilding import ChartIndex
 app_name= 'classification'
 
 urlpatterns = [
+
     url(r'^$', views.index, name='index'),
     url(r'^informations/$', views.informations, name='informations'),
     url(r'^statistics/$', views.statistics, name='statistics'),
@@ -31,4 +32,5 @@ urlpatterns = [
     url(r'^files/details/(?P<file_hash>[a-z0-9]{32})/delete/$', views.delFile, name='delFile'),
 
     url(r'^indexchart/$', view=ChartIndex.as_view(), name='ChartIndex')
+    
     ]

@@ -34,14 +34,14 @@ class FileCriterionInline(admin.TabularInline):
 #admin.site.register(FileStrings, FileStringsAdmin)
 
 class FileAdmin(admin.ModelAdmin):
-	list_display=('name', 'md5', 'size', 'anaTime', 'added_date', 'isMalicious')
+	list_display=('name', 'md5', 'size', 'anaTime', 'added_date', 'ismal')
 	list_filter=('added_date', 'maliciousness')
 	inlines=[FileSectionInline, FileImportInline, FileExportInline, FileCriterionInline, FileStringsInline]
 
 admin.site.register(File, FileAdmin)
 
 class DefaultCriterionAdmin(admin.ModelAdmin):
-	list_display=('name', 'coef', 'average')
+	list_display=('name', 'average')
 
 admin.site.register(DefaultCriterion, DefaultCriterionAdmin)
 

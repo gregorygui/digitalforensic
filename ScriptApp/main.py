@@ -10,6 +10,7 @@ import shutil
 import time
 import yaml
 import argparse
+from hashlib import md5
 
 from MachineLearning import build_dataset, RandomForest, Bayesian, figure_feature_importances, feature_importances
 from PEFileAnalyzer import peData
@@ -64,7 +65,7 @@ def uploadFile(f):
 	
 	headers={'Referer':base_url+'add/'}
 	files={'f':open(f, 'rb')}
-	data={'csrfmiddlewaretoken':client.cookies['csrftoken'], 'Content-Type':'multipart/form-data'}
+	data={'csrfmiddlewaretoken':client.cookies['csrftoken'], 'Content-Type':'multipart/form-data', 'mal':True}
 
 	r = client.post(base_url+'add/', headers=headers, data=data, files=files)
 
@@ -74,6 +75,7 @@ def uploadFile(f):
 		else:
 			print("Error was redirected to / for "+f)
 	else:
+		client.get(config['HOST']+'files/details/'+str(md5(open(f, 'rb').read()).hexdigest())+'/delete/')
 		print("### ERROR during upload process of "+f+" ###")
 
 def analyzeFile(f):

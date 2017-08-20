@@ -7,7 +7,11 @@ class URLForm(forms.Form):
 	u = forms.URLField(label='url',max_length=400,widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'https://google.com'}))
 
 class FileForm(forms.Form):
+	f = forms.FileField(widget=forms.ClearableFileInput())
+
+class IndexForm(forms.Form):
 	f = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+	mal = forms.BooleanField(label='Malicious', required=False, initial=False)	
 
 class AlgoRFForm(forms.Form):
 	trees = forms.IntegerField(label='Number of trees', initial=10, min_value=1, max_value=1000, widget=forms.TextInput(attrs={'class':'form-control'}))
