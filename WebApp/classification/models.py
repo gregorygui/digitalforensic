@@ -16,6 +16,7 @@ class File(models.Model):
 	oep=models.IntegerField(default=0)
 	size=models.IntegerField(default=0)
 	anaTime=models.DecimalField(max_digits=4, decimal_places=2, default=0)
+	training=models.BooleanField(default=False)
 
 	def isPacked(self):
 		return (packer!=null)

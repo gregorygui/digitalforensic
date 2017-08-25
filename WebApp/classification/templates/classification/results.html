@@ -7,7 +7,7 @@
 			<div class="card">
 				<div class="header">
 					<h3 class="title">Global Results</h3>
-					<small>X trainings in total</small>
+					<small>{% length analysis %} trainings in total</small>
 				</div>
 				<div class="content">
 					
@@ -23,14 +23,15 @@
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h5 class="panel-title">
-									<a data-toggle="collapse" href="#collapse{{ forloop.counter }}">{{a.id}} - {{a.date}} ({{a.duration}}s)</a>
+									<a data-toggle="collapse" href="#collapse{{ forloop.counter }}">{{a.id}} - {{a.algoname}} ({{a.date}})</a>
 								</h5>
 							</div>
 							<div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
-								<table>
+								<table class="table table-hover">
 									<thead>
 										<tr>
 											<td>Number of Files</td>
+											<td>Duration</td>
 											<td>Goodware</td>
 											<td>Malware</td>
 											<td>Training Samples</td>
@@ -40,6 +41,7 @@
 									<tbody>
 										<tr>
 											<td>{{a.files}}</td>
+											<td>{{a.duration}}s</td>
 											<td>{% sub a.files a.malware %}</td>
 											<td>{{a.malware}}</td>
 											<td>{{a.train}}</td>
@@ -47,7 +49,8 @@
 										</tr>
 									</tbody>
 								</table>
-								<table>
+								<br>
+								<table class="table table-hover">
 									<thead>
 										<tr>
 											<td>Name</td>
@@ -65,7 +68,9 @@
 										{% endfor %}
 									</tbody>
 								</table>
-								<a href="#"><button class="btn btn-default pull-right">CSV File</button></a>
+								<br/>
+								<a href="#"><button class="btn btn-default">CSV File</button></a>
+								<br/>
 							</div>
 						</div>
 						{% endfor %}

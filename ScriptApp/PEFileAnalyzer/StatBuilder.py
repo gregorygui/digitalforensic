@@ -57,6 +57,6 @@ class StatBuilder(object):
         d['Variance']=str(round(pvariance(s), 2))+'s'
         d['Min']=str(min(s))+'s'
         d['Max']=str(max(s))+'s'
-        d['Mode']=str(round(mode(s), 2))+'s'
+        d['Mode']=str(round(max(set(s),key=s.count), 2))+'s'
 
         return d

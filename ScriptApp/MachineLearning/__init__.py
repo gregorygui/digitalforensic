@@ -1,3 +1,3 @@
-from MachineLearning.DataTreatment import build_dataset
+from MachineLearning.DataTreatment import build_dataset, build_dataset2
 
 from MachineLearning.Algorithm import RandomForest, Bayesian, figure_feature_importances, feature_importances

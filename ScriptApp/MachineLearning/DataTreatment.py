@@ -38,13 +38,10 @@ def get_files(c):
 
 def isMalicious(c, fid):
 	t=(fid,)
-	c.execute("SELECT maliciousness FROM classification_file WHERE id=?", t)
+	c.execute("SELECT ismal FROM classification_file WHERE id=?", t)
 	m = (listTreatment(c))[0]
 
-	if m > 6:
-		return True
-	else:
-		return False
+	return m
 
 def get_data(c):
 	dc = get_default_criterion(c)
@@ -69,6 +66,85 @@ def get_data(c):
 	data['targets']=targets
 	
 	return data
+
+def notInTraining(c, nb):
+	t=(nb, )
+	c.execute("SELECT id FROM classification_file WHERE training=1 LIMIT ?", t)
+
+	return (listTreatment(c))
+
+def inTraining(c, nb):
+	ct=0
+	i=0
+	t=(nb, )
+	c.execute("SELECT id FROM classification_file LIMIT ?", t)
+	l=listTreatment(c)
+	
+	for f in l:
+		if not isMalicious(c, f):
+			ct+=1
+
+	c.execute("SELECT id FROM classification_file WHERE ismal=False")
+	l2=listTreatment(c)
+	l3=[x for x in l2 if x not in l]
+
+	while (ct/len(l2)) <= 0.5:
+		l.append(l3[i])
+		i+=1
+	print(l)
+	for f in l:
+		t=(f,)
+		c.execute("UPDATE classification_file SET training=True WHERE id=?", t)
+
+	return l
+
+def get_data2(c, l):
+	dc = get_default_criterion(c)
+	data = {}
+	ar=[]
+	targets = []
+
+	for fid in l:
+		row = [0] * len(dc)
+		fc=get_criterions(c, fid)
+		for crit in fc:
+			row[dc.index(crit)]=fc[crit]
+
+		ar.append(row)
+
+		if isMalicious(c, fid):
+			targets.append(1)
+		else:
+			targets.append(0)
+
+	data['data']=ar
+	data['targets']=targets
+	
+	return data
+
+
+def build_dataset2(d, nb, t):
+
+	db = sqlite3.connect(d)
+	c = db.cursor()
+	
+	dataset={}
+	dataset['features_names'] = get_default_criterion(c)
+
+	if t:
+		c.execute("UPDATE classification_file SET training = False")
+		listTreatment(c)
+		data=get_data2(c, inTraining(c, nb))
+	else:
+		data=get_data2(c, notInTraining(c, nb))
+
+	dataset['data'] = data['data']
+	dataset['targets'] = data['targets']
+	dataset['description'] = "Automatic built dataset based on malware samples from the web application. Features are criterions to define if it is malicious or not"
+
+	db.close()
+
+	return dataset
 
 def build_dataset(d):
 	db = sqlite3.connect(d)

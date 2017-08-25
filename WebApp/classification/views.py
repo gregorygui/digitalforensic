@@ -37,6 +37,7 @@ def index(request):
     'percentmal':pct,
     'form':IndexForm()
     }
+    
     return render(request, 'classification/index.html', context)
 
 def handle_file(f):
@@ -216,7 +217,8 @@ def statistics(request):
 
 def results(request):
     context={
-    'title':'Learning Results'
+    'title':'Learning Results',
+    'analysis':Analysis.objects.all().order_by('-date')
     }
     return render(request, 'classification/results.html', context)
 
