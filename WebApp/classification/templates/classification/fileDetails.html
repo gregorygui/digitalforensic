@@ -117,15 +117,22 @@
 			</div>
 			<div class="card">
 				<div class="content">
-					<h3 class="title"><a data-toggle="collapse" href="#collapseStrings">Strings</a></h3>
+					<h3 class="title">
+						Strings
+					</h3>
+					<br>
+						<a data-toggle="collapse" href="#collapseStrings"><button class="btn btn-default">Display</button></a>
 					<br/>
-					<ul class="list-group" id="collapseStrings" class="panel-collapse collapse">
-					{% for s in strings %}
-						<li class="list-group-item">
-						{{s.string}}
-						</li>
-					{% endfor %}
-					</ul>
+					<div id="collapseStrings" class="panel-collapse collapse">
+						<ul class="list-group" id="collapseStrings" >
+						{% for s in strings %}
+							<li class="list-group-item">
+							{{s.string}}
+							</li>
+						{% endfor %}
+						</ul>
+						<a data-toggle="collapse" href="#collapseStrings"><button class="btn btn-default">Hide</button></a>
+					</div>
 				</div>
 			</div>
 				<div class="clearfix">

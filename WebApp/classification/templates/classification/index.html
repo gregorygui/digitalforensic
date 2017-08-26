@@ -36,14 +36,5 @@
 		</div>
 	</div>
 </div>
-{% load highcharts_tags %}
-{% highcharts_js 1 0 0 0 %}
-<script type="text/javascript">
-$(function() {
-	$.getJSON("{% url 'classification:ChartIndex' %}", function(data){
-	$('#indexChart').highcharts(data);
-	});	
-})
-</script>
 
 {% endblock %}
