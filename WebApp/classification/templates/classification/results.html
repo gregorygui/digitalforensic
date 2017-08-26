@@ -27,25 +27,31 @@
 								</h5>
 							</div>
 							<div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
+								<ul class="list-group">
+									<li class="list-group-item">Duration: {{a.duration}}</li>
+								</ul>
+								<br>
 								<table class="table table-hover">
 									<thead>
 										<tr>
-											<td>Number of Files</td>
-											<td>Duration</td>
+											<td>Phase</td>
 											<td>Goodware</td>
 											<td>Malware</td>
-											<td>Training Samples</td>
-											<td>Testing Samples</td>
+											<td>Total</td>
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
-											<td>{{a.files}}</td>
-											<td>{{a.duration}}s</td>
-											<td>{% sub a.files a.malware %}</td>
-											<td>{{a.malware}}</td>
+											<td>Training</td>
+											<td>{% sub a.train a.train_malware %}</td>
+											<td>{{a.train_malware}}</td>
 											<td>{{a.train}}</td>
-											<td>{% sub a.files a.train %}</td>
+										</tr>
+										<tr>
+											<td>Testing</td>
+											<td>{% sub a.test a.test_malware %}</td>
+											<td>{{a.test_malware}}</td>
+											<td>{{a.test}}</td>
 										</tr>
 									</tbody>
 								</table>
@@ -78,6 +84,7 @@
 				</div>
 			</div>
 			<div class="clearfix">
+				<a href="{% url 'classification:parametersLearning' %}"><button class="btn btn-success pull-right">Run Training</button></a>
 	    		<a href="{% url 'classification:index' %}"><button class="btn btn-default pull-right">Return</button></a>
 			</div>
 		</div>

@@ -7,7 +7,7 @@ from .forms import HashForm, URLForm, FileForm, AlgoRFForm, AlgoNBForm, StringsF
 from .models import File, FileImport, FileFct, FileSection, FileExport, FileCriterion, DefaultCriterion, DefaultStrings, Analysis
 
 from PEFileAnalyzer import handle_uploaded_file, VTHash, VTUrl, VTFile, peData, defaultCriterions, StatBuilder
-from MachineLearning import RandomForest, Bayesian, build_dataset, feature_importances
+from MachineLearning import RandomForest, Bayesian, build_dataset, build_dataset2, feature_importances
 
 import os
 import uuid
@@ -294,12 +294,6 @@ def parametersLearning(request):
 
         formRF = AlgoRFForm(request.POST)
         formNB = AlgoNBForm(request.POST)
-        dataset=build_dataset('db.sqlite3')
-        context={
-            'title':'Results - ',
-            'samples':len(File.objects.all()),
-            'crit':len(DefaultCriterion.objects.all())
-        } 
 
         if formRF.is_valid():
             trees=formRF.cleaned_data['trees']
@@ -307,32 +301,61 @@ def parametersLearning(request):
             bootstrap=formRF.cleaned_data['bootstrap']
             weight = formRF.cleaned_data['weighted']
             start = time.clock()
+            
+            dataset=build_dataset2('db.sqlite3', formRF.cleaned_data['training'], True)
+            
             clf = RandomForest(dataset, trees, criterion, bootstrap, weight)
-            context['title']+='Random Forest'
-            context['fimp']=feature_importances(clf, dataset['features_names'])
 
             ana=Analysis.objects.create(
                         algoname='Random Forest',
                         args='Trees: '+str(trees)+', Bootstrap: '+str(bootstrap)+', Weighted: '+str(weight)+', Splitting: '+str(criterion),
-                        files=len(dataset['data']),
                         duration=round(time.clock()-start, 2),
-                        malware=len(dataset['data'])
+                        train_malware=len([x for x in dataset['targets'] if x]),
+                        train=len(dataset['data'])
                         )
+            ana.save()
+
+            for k, v in feature_importances(clf, dataset['features_names']):
+                ana.analysisfigures_set.create(name='Features importance', arg=k, value=v)
+
+            dataset=build_dataset2('db.sqlite3', formRF.cleaned_data['testing'], False)
+
+            ana.test=len(dataset['data'])
+            ana.test_malware=len([x for x in dataset['targets'] if x])
 
             ana.save()
-            
-            context.update({'clf':clf})
 
-            return render(request, 'classification/resultTraining.html', context)
+            ana.analysisfigures_set.create(name='Score', arg='Mean Accuracy', value=clf.score(dataset['data'], dataset['targets']))
+
+            return redirect('classification:results')
 
         elif formNB.is_valid():
+
             alpha=formNB.cleaned_data['alpha']
+            start = time.clock()
+            
+            dataset=build_dataset2('db.sqlite3', formNB.cleaned_data['training'], True)
             clf = Bayesian(dataset, alpha)
-            context['title']+='Naive Bayes'
 
-            context.update({'clf':clf})
+            ana=Analysis.objects.create(
+                        algoname='Naive Bayes',
+                        args='Smoothing: '+str(alpha),
+                        duration=round(time.clock()-start, 2),
+                        train_malware=len([x for x in dataset['targets'] if x]),
+                        train=len(dataset['data'])
+                        )
+            ana.save()
 
-            return render(request, 'classification/resultTraining.html', context)
+            dataset=build_dataset2('db.sqlite3', formNB.cleaned_data['testing'], False)
+
+            ana.test=len(dataset['data'])
+            ana.test_malware=len([x for x in dataset['targets'] if x])
+
+            ana.save()
+
+            ana.analysisfigures_set.create(name='Score', arg='Mean Accuracy', value=clf.score(dataset['data'], dataset['targets']))
+
+            return redirect('classification:results')
 
     context={
     'title':"Learning Algorithm Parameters",

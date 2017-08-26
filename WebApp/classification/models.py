@@ -80,9 +80,10 @@ class Analysis(models.Model):
 	algoname=models.CharField(max_length=200)
 	args=models.CharField(max_length=300)
 	duration=models.DecimalField(max_digits=4, decimal_places=2, default=0)
-	files=models.PositiveSmallIntegerField(default=0)
-	malware=models.PositiveSmallIntegerField(default=0)
 	train=models.PositiveSmallIntegerField(default=0)
+	train_malware=models.PositiveSmallIntegerField(default=0)
+	test=models.PositiveSmallIntegerField(default=0)
+	test_malware=models.PositiveSmallIntegerField(default=0)
 	result=models.CharField(max_length=100)
 
 class AnalysisFigures(models.Model):

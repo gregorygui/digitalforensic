@@ -70,7 +70,10 @@ class peData:
  				
  				if entry.imports and entry.dll:
  					for i in entry.imports:
- 						listImports.append((i.name).decode('ascii'))
+ 						try:
+ 							listImports.append((i.name).decode('ascii'))
+ 						except:
+ 							continue
 
  				dictImports[e.decode('ascii')]=listImports
  			return dictImports
@@ -86,7 +89,10 @@ class peData:
  		if hasattr(self.file, 'DIRECTORY_ENTRY_EXPORT'):
 
  			for e in self.file.DIRECTORY_ENTRY_EXPORT.symbols:
- 				listExports.append(e.name.decode('ascii'))
+ 				try:
+ 					listExports.append(e.name.decode('ascii'))
+ 				except:
+ 					continue
  			return listExports
  		else:
  			return None

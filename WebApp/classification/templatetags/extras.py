@@ -6,6 +6,10 @@ register = template.Library()
 def sub2(arg1, arg2):
 	return arg1-arg2
 
+@register.simple_tag(name="add")
+def add2(arg1, arg2):
+	return arg1+arg2
+
 @register.simple_tag(name="length")
 def lengthObj(arg1):
 	return len(arg1)

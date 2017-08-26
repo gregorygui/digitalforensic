@@ -69,7 +69,7 @@ def get_data(c):
 
 def notInTraining(c, nb):
 	t=(nb, )
-	c.execute("SELECT id FROM classification_file WHERE training=1 LIMIT ?", t)
+	c.execute("SELECT id FROM classification_file WHERE training=0 LIMIT ?", t)
 
 	return (listTreatment(c))
 
@@ -84,17 +84,18 @@ def inTraining(c, nb):
 		if not isMalicious(c, f):
 			ct+=1
 
-	c.execute("SELECT id FROM classification_file WHERE ismal=False")
+	c.execute("SELECT id FROM classification_file WHERE ismal=0")
 	l2=listTreatment(c)
 	l3=[x for x in l2 if x not in l]
 
-	while (ct/len(l2)) <= 0.5:
+	while (ct/len(l2)) < 0.5:
 		l.append(l3[i])
+		ct+=1
 		i+=1
-	print(l)
+	
 	for f in l:
 		t=(f,)
-		c.execute("UPDATE classification_file SET training=True WHERE id=?", t)
+		c.execute("UPDATE classification_file SET training=1 WHERE id=?", t)
 
 	return l
 
@@ -132,7 +133,7 @@ def build_dataset2(d, nb, t):
 	dataset['features_names'] = get_default_criterion(c)
 
 	if t:
-		c.execute("UPDATE classification_file SET training = False")
+		c.execute("UPDATE classification_file SET training = 0")
 		listTreatment(c)
 		data=get_data2(c, inTraining(c, nb))
 	else:
