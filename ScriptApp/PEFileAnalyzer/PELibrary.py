@@ -9,7 +9,7 @@ import re
 
 from math import log
 
-from PEFileAnalyzer.MalwareDefinition import inconsistentCompileDate, VTScore, get_size, detectRemoteConnection, inconsistentSections, stringsScore, functionScore, sectionsOverflow, overSized
+from PEFileAnalyzer.MalwareDefinition import inconsistentCompileDate, VTScore, get_size, detectFiles, detectReg, detectRemoteConnection, inconsistentSections, stringsScore, functionScore, sectionsOverflow, overSized
 
 criterions=dict()
 
@@ -20,6 +20,8 @@ criterions['maliciousFunction']={'name':'Malicious Function(s)', 'function':'fun
 criterions['overSized']={'name':'Oversized File', 'function':'overSized'}
 criterions['remoteconnection']={'name':'Remote Connection detected', 'function':'detectRemoteConnection'}
 criterions['maliciousStrings']={'name':'Malicious String(s)', 'function':'stringsScore'}
+criterions['registrymodif']={'name':'Registry impact detected', 'function':'detectReg'}
+criterions['filemodif']={'name':'Files impact detected', 'function':'detectFiles'}
 
 def defaultCriterions():
 	return criterions
@@ -41,6 +43,10 @@ def execute_func(f, peData):
 		return globals()[f](peData.getSections())
 	elif f == 'stringsScore':
 		return globals()[f](peData.getDefStr(), peData.getStrings())
+	elif f == 'detectReg':
+		return globals()[f](peData.getStrings())
+	elif f == 'detectFiles':
+		return globals()[f](peData.getStrings())
 
 class peData:
  	"""Analyze a PE file"""
