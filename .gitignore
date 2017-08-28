@@ -23,6 +23,7 @@
 
 #Ignore config files
 **/config*
+**/settings*
 
 #Ignore Logs
 **/Log*
