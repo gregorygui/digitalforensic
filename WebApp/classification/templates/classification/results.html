@@ -7,7 +7,9 @@
 			<div class="card">
 				<div class="header">
 					<h3 class="title">Global Results</h3>
-					<small>{% length analysis %} trainings in total</small>
+					<small>{% length analysis %} trainings in total - {{dur}}s in average</small>
+					<br>
+					<small>{{acc}} Average Accuracy</small>
 				</div>
 				<div class="content">
 					
@@ -29,6 +31,7 @@
 							<div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
 								<ul class="list-group">
 									<li class="list-group-item">Duration: {{a.duration}}</li>
+									<li class="list-group-item">Parameters: {{a.args}}</li>
 								</ul>
 								<br>
 								<table class="table table-hover">

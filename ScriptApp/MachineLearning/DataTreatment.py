@@ -67,19 +67,10 @@ def get_data(c):
 	
 	return data
 
-def notInTraining(c, nb):
-	t=(nb, )
-	c.execute("SELECT id FROM classification_file WHERE training=0 LIMIT ?", t)
-
-	return (listTreatment(c))
-
-def inTraining(c, nb):
+def get_Goodware(c, l, pct):
 	ct=0
 	i=0
-	t=(nb, )
-	c.execute("SELECT id FROM classification_file LIMIT ?", t)
-	l=listTreatment(c)
-	
+
 	for f in l:
 		if not isMalicious(c, f):
 			ct+=1
@@ -88,10 +79,25 @@ def inTraining(c, nb):
 	l2=listTreatment(c)
 	l3=[x for x in l2 if x not in l]
 
-	while (ct/len(l2)) < 0.5:
+	while (ct/len(l2)) < pct:
 		l.append(l3[i])
 		ct+=1
 		i+=1
+
+	return l
+
+def notInTraining(c, nb):
+	t=(nb, )
+	c.execute("SELECT id FROM classification_file WHERE training=0 LIMIT ?", t)
+	l=listTreatment(c)
+	return (get_Goodware(c, l, 0.1))
+
+def inTraining(c, nb):
+	t=(nb, )
+	c.execute("SELECT id FROM classification_file LIMIT ?", t)
+	l=listTreatment(c)
+	
+	l=get_Goodware(c, l, 0.5)
 	
 	for f in l:
 		t=(f,)

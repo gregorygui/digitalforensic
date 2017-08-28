@@ -7,6 +7,8 @@ from sklearn.naive_bayes import BernoulliNB
 
 from operator import itemgetter
 
+from math import sqrt
+
 def figure_feature_importances(clf, features):
 	plt.figure()
 	plt.title("Features Importances")
@@ -34,7 +36,7 @@ def feature_importances(clf, features):
 	return sorted(d.items(), key=itemgetter(1), reverse=True)
 
 def RandomForest(ds,t,c,b,w):
-	clf = RandomForestClassifier(n_estimators=t, criterion=c, bootstrap=b)
+	clf = RandomForestClassifier(n_estimators=t, criterion=c, bootstrap=b, max_depth=int(sqrt(len(ds['data']))))
 	
 	if w:
 		clf.set_params(class_weight='balanced')

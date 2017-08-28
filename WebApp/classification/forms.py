@@ -28,7 +28,7 @@ class AlgoRFForm(SamplesForm):
 	trees = forms.IntegerField(label='Number of trees',
 		initial=10,
 		min_value=1,
-		max_value=1000,
+		max_value=100000,
 		widget=forms.TextInput(attrs={'class':'form-control'}))
 	#max_depth = forms.IntegerField(label='Max Depth', min_value=1, max_value=1000)
 	CHOICES = (

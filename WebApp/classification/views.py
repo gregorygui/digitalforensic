@@ -216,9 +216,27 @@ def statistics(request):
     return render(request, 'classification/statistics.html', context)
 
 def results(request):
+    ana=Analysis.objects.all().order_by('-date')
+    acc=0
+    t=0
+
+    try:
+        for a in ana:
+            t+=a.duration
+            for f in a.analysisfigures_set.filter(name='Score'):
+                acc+=f.value
+        acc=acc/len(ana)
+        t=t/len(ana)
+
+    except:
+        acc=0
+        t=0
+
     context={
     'title':'Learning Results',
-    'analysis':Analysis.objects.all().order_by('-date')
+    'acc':round(acc,2),
+    'dur':round(t,2),
+    'analysis':ana
     }
     return render(request, 'classification/results.html', context)
 

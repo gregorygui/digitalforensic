@@ -8,6 +8,7 @@
 #Ignore sqlite database
 ***/db*
 **/samples.sqlite3*
+**/samples.old*
 
 #Ignore Uploads
 **/Uploads/
